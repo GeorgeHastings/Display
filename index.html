@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Display</title>
+		<link rel="stylesheet" href="css/main.css" media="screen">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<script type="text/javascript" src="js/dataservice.js"></script>
+		<script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
+	</head>
+	<body>
+		<div id="authorize-div" style="display: none">
+	      <span>Authorize access to Google Calendar API</span>
+	      <!--Button for the user to click to initiate auth sequence -->
+	      <button id="authorize-button" onclick="handleAuthClick(event)">
+	        Authorize
+	      </button>
+	    </div>
+		<pre id="output"></pre>
+		<h1 id="today" class="center-text"></h1>
+		<div id="event-container">
+			<template id="event-template">
+				<div class="event">
+					<div class="time"></div>
+					<div class="event-info">
+						<div class="event-content">
+							<h1 class="event-title"></h1>
+							<div class="event-location"></div>
+						</div>
+						<div class="portrait"><img src=""></div>
+					</div>
+				</div>
+			</template>
+		</div>
+		<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<script type="text/javascript" src="js/date.js"></script>
+		<script type="text/javascript" src="js/app.js"></script>
+	</body>
+</html>
