@@ -67,11 +67,16 @@ h2 {
 	}
 }
 
-.time {
+.day {
+	
+}
+
+.date {
 	width: 15vw;
 	font-size: 1.5em;
 	margin-left: 5vw;
 	float: left;
+	@extend .clearfix;
 }
 
 .event-info {

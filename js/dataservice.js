@@ -79,7 +79,7 @@ function thereAreEvents(events) {
   }
 }
 
-function getEventTime(thisEvent) {
+function getEventDay(thisEvent) {
   var when;
   if(thisEvent.start.dateTime) {
     when = thisEvent.start.dateTime;
@@ -87,7 +87,21 @@ function getEventTime(thisEvent) {
   else {
     when = thisEvent.start.date;
   }
-  return when;
+  return moment(when);
+}
+
+function getDisplayTime(thisEvent) {
+  if(thisEvent.start.dateTime) {
+    var day = moment(thisEvent.start.dateTime).format('dddd');
+    var start = moment(thisEvent.start.dateTime);
+    var end = moment(thisEvent.end.dateTime);
+    return [day, ''+start.format('h:mm')+'-'+end.format('h:mm a')+''];
+  }
+  else {
+    var when = thisEvent.start.date;
+    var day = moment(when).format('dddd');
+    return [day, 'All day'];
+  } 
 }
 
 function getCreator(thisEvent) {
@@ -126,20 +140,21 @@ function listUpcomingEvents() {
     var events = resp.items;
 
     if (thereAreEvents(events)) {
-      
       for (var i = 0; i < events.length; i++) {
         var thisEvent = events[i];
-        var when = moment(getEventTime(thisEvent));
+        // var when = getEventDay(thisEvent);
 
-        if(isToday(when)){
+        // if(isToday(when)){
           var creator = getCreator(thisEvent);
-          var time = '' + when.format('h:mm a') + '';
+          var time = getDisplayTime(thisEvent)[1];
           var where = getLocation(thisEvent);
+          var day = getDisplayTime(thisEvent)[0];
           
-          Events.push(new Event(thisEvent.summary, time, creator, where));
-        }
+          Events.push(new Event(thisEvent.summary, day, time, creator, where));
+        // }
       }
     }
+
     fetchImages();
     setTimeout(function(){
       genEvents();

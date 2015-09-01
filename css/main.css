@@ -39,7 +39,7 @@ h2 {
 .center-text {
   text-align: center; }
 
-.clearfix:after, .event:after, .event-info:after {
+.clearfix:after, .event:after, .date:after, .event-info:after {
   content: "";
   display: table;
   clear: both; }
@@ -49,7 +49,7 @@ h2 {
   .event + .event {
     margin-top: 2vh; }
 
-.time {
+.date {
   width: 15vw;
   font-size: 1.5em;
   margin-left: 5vw;

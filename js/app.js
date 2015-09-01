@@ -9,8 +9,9 @@ var Images = [];
 var tmpl = document.getElementById('event-template');
 var container = document.getElementById('event-container');
 
-var Event = function(summary, time, creator, where) {
+var Event = function(summary, day, time, creator, where) {
 	this.summary = summary;
+	this.day = day;
 	this.time = time;
 	this.creator = creator;
 	this.where = where;
@@ -51,6 +52,7 @@ var genEvents = function() {
 	for(var i = 0; i < Events.length; i++) {
 		var thisEvent = Events[i];
 		var template = tmpl.content.cloneNode(true);
+		template.querySelector('.day').innerHTML = thisEvent.day;
 		template.querySelector('.event-title').innerHTML = thisEvent.summary;
 		template.querySelector('.event-location').innerHTML = thisEvent.where;
 		template.querySelector('.time').innerHTML = thisEvent.time;
@@ -59,12 +61,7 @@ var genEvents = function() {
 	}
 };
 
-var renderToday = function(){
-	document.getElementById('today').innerHTML = moment().format('dddd');
-};
-
 document.addEventListener('DOMContentLoaded', function(){
-	renderToday();
 	checkAuth();
 	loadCalendarApi();
 	listUpcomingEvents();
