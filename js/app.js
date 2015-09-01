@@ -9,12 +9,23 @@ var Images = [];
 var tmpl = document.getElementById('event-template');
 var container = document.getElementById('event-container');
 
-var Event = function(summary, day, time, creator, where) {
+var Event = function(summary, day, date, time, where, creator, calendar) {
 	this.summary = summary;
 	this.day = day;
+	this.date = date;
 	this.time = time;
 	this.creator = creator;
 	this.where = where;
+	this.calendar = calendar;
+};
+
+Event.prototype.getColor = function() {
+	if(this.calendar === 'NY Support') {
+		return '#E56548';
+	}
+	else {
+		return 'rgb(0,155,255)';
+	}
 };
 
 Event.prototype.handler = function(e) {
@@ -48,15 +59,18 @@ var fetchImages = function() {
 	}
 };
 
-var genEvents = function() {
+var renderEvents = function() {
+	console.log(Images);
 	for(var i = 0; i < Events.length; i++) {
 		var thisEvent = Events[i];
 		var template = tmpl.content.cloneNode(true);
-		template.querySelector('.day').innerHTML = thisEvent.day;
+		template.querySelector('.event-day').innerHTML = thisEvent.day;
+		template.querySelector('.event-date').innerHTML = thisEvent.date;
 		template.querySelector('.event-title').innerHTML = thisEvent.summary;
 		template.querySelector('.event-location').innerHTML = thisEvent.where;
-		template.querySelector('.time').innerHTML = thisEvent.time;
+		template.querySelector('.event-time').innerHTML = thisEvent.time;
 		template.querySelector('img').src = Images[i];
+		template.querySelector('.event-info').style.background = thisEvent.getColor();
 		container.appendChild(template);
 	}
 };
@@ -67,3 +81,6 @@ document.addEventListener('DOMContentLoaded', function(){
 	listUpcomingEvents();
 });
 
+// setInterval(function(){
+// 	location.reload();
+// }, 30000);

@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
 var CLIENT_ID = '1054522317473-1q9d0u8sd9pqv7ie9cuvv27tsi47q9oo.apps.googleusercontent.com';
 
-var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 
 /**
  * Check if current user has authorized this application.
@@ -92,15 +92,17 @@ function getEventDay(thisEvent) {
 
 function getDisplayTime(thisEvent) {
   if(thisEvent.start.dateTime) {
-    var day = moment(thisEvent.start.dateTime).format('dddd');
+    var day = moment(thisEvent.start.dateTime).format('ddd');
+    var date = moment(thisEvent.start.dateTime).format('D');
     var start = moment(thisEvent.start.dateTime);
     var end = moment(thisEvent.end.dateTime);
-    return [day, ''+start.format('h:mm')+'-'+end.format('h:mm a')+''];
+    return [day, date, ''+start.format('h:mm')+' - '+end.format('h:mm a')+''];
   }
   else {
     var when = thisEvent.start.date;
-    var day = moment(when).format('dddd');
-    return [day, 'All day'];
+    var day = moment(when).format('ddd');
+    var date = moment(when).format('D');
+    return [day, date, 'All day'];
   } 
 }
 
@@ -142,23 +144,29 @@ function listUpcomingEvents() {
     if (thereAreEvents(events)) {
       for (var i = 0; i < events.length; i++) {
         var thisEvent = events[i];
-        // var when = getEventDay(thisEvent);
 
-        // if(isToday(when)){
-          var creator = getCreator(thisEvent);
-          var time = getDisplayTime(thisEvent)[1];
+        // if(isToday(getEventDay(thisEvent))){
+          var summary = thisEvent.summary;
+          var day = '';
+          var date = '';
+          var time = getDisplayTime(thisEvent)[2];
           var where = getLocation(thisEvent);
-          var day = getDisplayTime(thisEvent)[0];
+          var creator = getCreator(thisEvent);
+          var calendar = thisEvent.organizer.displayName;
+
+          if(i === 0 || i > 0 && getDisplayTime(events[i-1])[0] !== getDisplayTime(events[i])[0]) {
+            day = getDisplayTime(thisEvent)[0];
+            date = getDisplayTime(thisEvent)[1];
+          }
           
-          Events.push(new Event(thisEvent.summary, day, time, creator, where));
+          Events.push(new Event(summary, day, date, time, where, creator, calendar));
+
         // }
       }
+      fetchImages();
+      setTimeout(function(){
+          renderEvents();
+      }, 2000);
     }
-
-    fetchImages();
-    setTimeout(function(){
-      genEvents();
-    }, 1000); 
   });
 }
-
