@@ -43,6 +43,20 @@ Event.prototype.getImage = function() {
 	callAjax(emailName, this.handler);
 };
 
+function callAjax(emailName, callback){
+  var c = new XMLHttpRequest;
+  c.onload = callback;
+  c.open('GET', 'http://localhost:1235/api/teammembers?limit=10&offset=0&email='+emailName+'%40ideo.com');
+  c.send();
+}
+
+var fetchImages = function() {
+	for(var i = 0; i < Events.length; i++) {
+		var thisEvent = Events[i];
+		thisEvent.getImage();
+	}
+};
+
 var parseCreatorName = function(creator) {
 		creator = creator.replace(/\s/g, '');
 		return creator;
@@ -50,13 +64,6 @@ var parseCreatorName = function(creator) {
 
 var parseEmail = function(email) {
 	return email.substring(0, email.indexOf('@'));
-};
-
-var fetchImages = function() {
-	for(var i = 0; i < Events.length; i++) {
-		var thisEvent = Events[i];
-		thisEvent.getImage(i);
-	}
 };
 
 var renderEvents = function() {

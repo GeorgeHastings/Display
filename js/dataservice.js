@@ -16,13 +16,6 @@ function checkAuth() {
     }, handleAuthResult);
 }
 
-function callAjax(emailName, callback){ // Url, Callback, just a placeholder
-  var c = new XMLHttpRequest;
-  c.open('GET', 'http://localhost:1235/api/teammembers?limit=10&offset=0&email='+emailName+'%40ideo.com');
-  c.onload = callback;
-  c.send();
-}
-
 /**
  * Handle response from authorization server.
  *
@@ -66,6 +59,13 @@ function loadCalendarApi() {
  * the authorized user's calendar. If no events are found an
  * appropriate message is printed.
  */
+
+ function httpGet(theUrl) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( 'GET', theUrl, false ); // false for synchronous request
+    xmlHttp.send();
+    return xmlHttp.responseText;
+}
 
 function isToday(whenObj) {
   if(moment().format('MMM Do YY') === whenObj.format('MMM Do YY')) {
@@ -144,6 +144,7 @@ function listUpcomingEvents() {
     if (thereAreEvents(events)) {
       for (var i = 0; i < events.length; i++) {
         var thisEvent = events[i];
+        console.log(thisEvent);
 
         // if(isToday(getEventDay(thisEvent))){
           var summary = thisEvent.summary;
