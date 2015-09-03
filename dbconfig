@@ -1,0 +1,118 @@
+{
+    "host":"localhost",
+    "port":"1235",
+    "dbserver":"newyork.ideo.com",
+    "dbport":"5984",
+    "staticDirs":["."],
+    "resourceDescriptionTemplate":{
+        "apiVersion":"1.0.0",
+        "swaggerVersion":"1.2",
+        "authorizations":{},
+        "apis":[],
+        "info":{
+            "title":"",
+            "description":"",
+            "termsOfServiceUrl":"",
+            "contact":"",
+            "license":"",
+            "licenseUrl":""
+        }
+    },
+    "resourceTemplate":{
+        "apiVersion":"1.0.0",
+        "swaggerVersion":"1.2",
+        "basePath":"",
+        "resourcePath":"",
+        "produces":[
+            "application/json"
+        ],
+        "consumes":[
+            "application/json"
+        ],
+        "authorizations":{},
+        "apis":[],
+        "models":{}
+    },
+    "commonResponseCodes":[
+        {
+            "code": 404,
+            "message": "Item not found"    
+        },
+        {
+            "code":500,
+            "message":"Internal server error"
+        },
+        {
+            "code":409,
+            "message":"Bad parameter or other argument."
+        }
+    ],
+    "commonGetParams":[
+        {
+            "name":"limit",
+            "type":"integer",
+            "paramType":"query",
+            "minimum":"0",
+            "maximum":"100",
+            "defaultValue":"10"
+        },
+        {
+            "name":"offset",
+            "type":"integer",
+            "paramType":"query",
+            "minimum":"0",
+            "defaultValue":"0"
+        }
+    ],
+    "containerModels":[
+        {
+            "id": "Container",
+            "description": "A generic container type.",
+            "properties": {
+                "meta": {
+                    "$ref": "metalist"
+                },
+                "containerType":{
+                    "type":"string"
+                }
+            },
+            "subTypes": [],
+            "discriminator":"containerType",
+            "required":["containerType"]
+
+        },
+        {
+            "id":"Metalist",
+            "description":"A container for meta information about a call to a service.",
+            "properties":{
+                "responseCode":{
+                    "type":"number",
+                    "minimum":"100",
+                    "maximum":"999",
+                    "description":"The HTTP response code for a call."
+                },
+                "responseMessage":{
+                    "type":"string",
+                    "description":"A human readable description of the response to the call."
+                },
+                "offset": {
+                    "type":"integer",
+                    "description":"The result offset requested during the call."
+                },
+                "limit": {
+                    "type":"integer",
+                    "description":"The maximum number of results requested during the call."
+                },
+                "total": {
+                    "type":"integer",
+                    "description":"The total number of results available."
+                },
+                "count": {
+                    "type":"integer",
+                    "description":"The number of results returned by the call."
+                }
+            }
+        }
+    ]
+
+}
