@@ -46,7 +46,6 @@ Event.prototype.handler = function(e) {
 		console.log(set);
 		for(var i = 0; i < set.length; i++) {
 			set[i].src = ''+obj.results[0].image+'';
-			console.log(set[i].src);
 		}
 	}	
 };
