@@ -8,9 +8,9 @@ body {
   width: 100%; }
 
 body {
-  font: 17px / 27px 'Gotham';
+  font: 19px / 27px 'Gotham';
   color: #132033;
-  background: #fff; }
+  background: #fafafa; }
 
 ul,
 dl {
@@ -43,17 +43,20 @@ h2 {
   display: table;
   clear: both; }
 
+.event-container {
+  padding: 2.5vw 0; }
+
 .event {
   display: block; }
   .event + .event {
-    margin-top: 2vh; }
+    margin-top: 2.5vw; }
   .event-content {
     float: left;
     max-width: 80%; }
   .event-date {
     font-size: 2.2em;
     line-height: 1em;
-    font-weight: bold; }
+    font-weight: 500; }
   .event-day {
     font-size: 1em;
     line-height: 1em;
@@ -61,7 +64,8 @@ h2 {
     color: #9b9bb9; }
   .event-title {
     font-size: 2.5em;
-    line-height: 1.5em;
+    font-weight: 500;
+    line-height: 1.3em;
     margin-top: 0;
     margin-bottom: 1.5em; }
   .event-time, .event-location {
@@ -76,8 +80,6 @@ h2 {
   color: #fff;
   background: #009bff;
   border-radius: 5px; }
-  .event-info h1 {
-    font-weight: bold; }
 
 .date-container {
   width: 15vw;
