@@ -43,7 +43,6 @@ Event.prototype.handler = function(e) {
 	var obj = JSON.parse(e.target.response);
 	if(obj.results) {
 		var set = document.querySelectorAll('[data-person="'+obj.results[0].email+'"]');
-		console.log(set);
 		for(var i = 0; i < set.length; i++) {
 			set[i].src = ''+obj.results[0].image+'';
 		}
@@ -84,10 +83,11 @@ var sortEventsByTime = function() {
 	});
 };
 
-var renderEvents = function() {
-	for(var i = 0; i < Events.length; i++) {
+var renderEvents = function(amt) {
+	for(var i = 0; i < amt; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
+		var container = document.getElementById(thisEvent.day);
 	
 		if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
 			template.querySelector('.event-day').innerHTML = thisEvent.day;
@@ -100,7 +100,7 @@ var renderEvents = function() {
 		template.querySelector('.event-time').innerHTML = thisEvent.time;
 		template.querySelector('img').setAttribute('data-person', thisEvent.creator);
 		template.querySelector('.event-info').style.background = thisEvent.getColor();
-		UI.eventContainer.appendChild(template);
+		container.appendChild(template);
 	}
 };
 
@@ -187,7 +187,7 @@ var getRequest = function(calendar) {
     'timeMin': (new Date()).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 5,
+    'maxResults': 20,
     'orderBy': 'startTime'
   });
   return request;
@@ -218,7 +218,7 @@ function listAllEvents() {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents();
+      renderEvents(20);
       fetchImages();
   }, 2000);
 }

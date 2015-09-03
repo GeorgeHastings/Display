@@ -10,7 +10,7 @@ body {
 }
 
 body {
-	font: 19px / 27px 'Gotham';
+	font: 6px / 15px 'Gotham';
 	color: $deepblue;
 	background: #fafafa;
 }
@@ -61,12 +61,26 @@ h2 {
 	padding: 2.5vw 0;
 }
 
+.week-container {
+	margin: 0;
+	padding: 0;
+
+	li {
+		width: 20vw;
+		float: left;
+
+		& + li {
+			padding-left: 1vw;
+		}
+	}
+}
+
 .event {
 	display: block;
 	@extend .clearfix;
 
 	& + .event {
-		margin-top: 2.5vw;
+		margin-top: 1vw;
 	}
 
 	&-content {
@@ -105,9 +119,9 @@ h2 {
 
 .event-info {
 	float: right;
-	width: 80vw;
-	padding: 2.5vw;
-	margin-right: 5vw;
+	width: 100%;
+	padding: 2vw;
+	// margin-right: 5vw;
 	color: #fff;
 	background: rgb(0,155,255);
 	border-radius: 5px;
@@ -125,9 +139,10 @@ h2 {
 
 .portrait {
 	float: right;
-	width: 100px;
-	max-width: 20%;
-	height: 100px;
+	width: 3vw;
+	// max-width: 20%;
+	// max-height: 20%;
+	height: 3vw;
 	border-radius: 50%;
 	overflow: hidden;
 

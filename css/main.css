@@ -8,7 +8,7 @@ body {
   width: 100%; }
 
 body {
-  font: 19px / 27px 'Gotham';
+  font: 6px / 15px 'Gotham';
   color: #132033;
   background: #fafafa; }
 
@@ -46,10 +46,19 @@ h2 {
 .event-container {
   padding: 2.5vw 0; }
 
+.week-container {
+  margin: 0;
+  padding: 0; }
+  .week-container li {
+    width: 20vw;
+    float: left; }
+    .week-container li + li {
+      padding-left: 1vw; }
+
 .event {
   display: block; }
   .event + .event {
-    margin-top: 2.5vw; }
+    margin-top: 1vw; }
   .event-content {
     float: left;
     max-width: 80%; }
@@ -74,9 +83,8 @@ h2 {
 
 .event-info {
   float: right;
-  width: 80vw;
-  padding: 2.5vw;
-  margin-right: 5vw;
+  width: 100%;
+  padding: 2vw;
   color: #fff;
   background: #009bff;
   border-radius: 5px; }
@@ -89,9 +97,8 @@ h2 {
 
 .portrait {
   float: right;
-  width: 100px;
-  max-width: 20%;
-  height: 100px;
+  width: 3vw;
+  height: 3vw;
   border-radius: 50%;
   overflow: hidden; }
   .portrait img {
