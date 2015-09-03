@@ -58,15 +58,17 @@ h2 {
 }
 
 .event-container {
-	padding: 2.5vw 0;
+	// padding: 2.5vw;
 }
 
 .week-container {
 	margin: 0;
 	padding: 0;
+	padding: 1vw 1vw;
+	@extend .clearfix;
 
 	li {
-		width: 20vw;
+		width: 20%;
 		float: left;
 
 		& + li {
@@ -95,8 +97,8 @@ h2 {
 	}
 
 	&-day {
-		font-size: 1em;
-		line-height: 1em;
+		font-size: 1.5em;
+		line-height: 1.5em;
 		margin-top: 0.2em;
 		color: rgb(155,155,185);
 	}
@@ -107,6 +109,7 @@ h2 {
 		line-height: 1.3em;
 		margin-top: 0;
 		margin-bottom: 1.5em;
+		word-break: break-word;
 	}
 
 	&-time,
@@ -129,9 +132,8 @@ h2 {
 }
 
 .date-container {
-	width: 15vw;
+	width: 100%;
 	font-size: 1.5em;
-	// margin-left: 5vw;
 	float: left;
 	text-align: center;
 	@extend .clearfix;
@@ -139,10 +141,10 @@ h2 {
 
 .portrait {
 	float: right;
-	width: 3vw;
+	width: 2.5vw;
 	// max-width: 20%;
 	// max-height: 20%;
-	height: 3vw;
+	height: 2.5vw;
 	border-radius: 50%;
 	overflow: hidden;
 

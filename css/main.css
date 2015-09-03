@@ -38,19 +38,17 @@ h2 {
 .center-text {
   text-align: center; }
 
-.clearfix:after, .event:after, .event-info:after, .date-container:after {
+.clearfix:after, .week-container:after, .event:after, .event-info:after, .date-container:after {
   content: "";
   display: table;
   clear: both; }
 
-.event-container {
-  padding: 2.5vw 0; }
-
 .week-container {
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  padding: 1vw 1vw; }
   .week-container li {
-    width: 20vw;
+    width: 20%;
     float: left; }
     .week-container li + li {
       padding-left: 1vw; }
@@ -67,8 +65,8 @@ h2 {
     line-height: 1em;
     font-weight: 500; }
   .event-day {
-    font-size: 1em;
-    line-height: 1em;
+    font-size: 1.5em;
+    line-height: 1.5em;
     margin-top: 0.2em;
     color: #9b9bb9; }
   .event-title {
@@ -76,7 +74,8 @@ h2 {
     font-weight: 500;
     line-height: 1.3em;
     margin-top: 0;
-    margin-bottom: 1.5em; }
+    margin-bottom: 1.5em;
+    word-break: break-word; }
   .event-time, .event-location {
     font-size: 1.7em;
     line-height: 1.7em; }
@@ -90,15 +89,15 @@ h2 {
   border-radius: 5px; }
 
 .date-container {
-  width: 15vw;
+  width: 100%;
   font-size: 1.5em;
   float: left;
   text-align: center; }
 
 .portrait {
   float: right;
-  width: 3vw;
-  height: 3vw;
+  width: 2.5vw;
+  height: 2.5vw;
   border-radius: 50%;
   overflow: hidden; }
   .portrait img {

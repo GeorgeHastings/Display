@@ -29,7 +29,7 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 
 Event.prototype.getColor = function() {
 	if(this.calendar === 'NY Support') {
-		return '#EA643B';
+		return '#A367C6';
 	}
 	if(this.calendar === 'NY - Creative Connections') {
 		return '#4BC4A4';
@@ -187,7 +187,7 @@ var getRequest = function(calendar) {
     'timeMin': (new Date()).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 20,
+    'maxResults': 23,
     'orderBy': 'startTime'
   });
   return request;
@@ -218,7 +218,7 @@ function listAllEvents() {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(20);
+      renderEvents(23);
       fetchImages();
   }, 2000);
 }
