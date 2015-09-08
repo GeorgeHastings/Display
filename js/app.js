@@ -167,16 +167,16 @@ function getSortIndex(thisEvent) {
 function buildEvents(events) {
     for (var i = 0; i < events.length; i++) {
 	  	var thisEvent = events[i];
-		var summary = thisEvent.summary;
-		var day = getDisplayTime(thisEvent)[0];
-		var date = getDisplayTime(thisEvent)[1];
-		var time = getDisplayTime(thisEvent)[2];
-		var where = getLocation(thisEvent);
-		var creator = getCreator(thisEvent);
-		var calendar = thisEvent.organizer.displayName;
-		var sortIndex = getSortIndex(thisEvent);
+		  var summary = thisEvent.summary;
+		  var day = getDisplayTime(thisEvent)[0];
+		  var date = getDisplayTime(thisEvent)[1];
+		  var time = getDisplayTime(thisEvent)[2];
+		  var where = getLocation(thisEvent);
+		  var creator = getCreator(thisEvent);
+		  var calendar = thisEvent.organizer.displayName;
+		  var sortIndex = getSortIndex(thisEvent);
 
-		Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
+		  Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
 	}
 }
 
