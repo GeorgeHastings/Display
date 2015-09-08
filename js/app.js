@@ -43,10 +43,8 @@ Event.prototype.handler = function(e) {
 	var obj = JSON.parse(e.target.response);
 	if(obj.results) {
 		var set = document.querySelectorAll('[data-person="'+obj.results[0].email+'"]');
-		console.log(set);
 		for(var i = 0; i < set.length; i++) {
 			set[i].src = ''+obj.results[0].image+'';
-			console.log(set[i].src);
 		}
 	}	
 };
