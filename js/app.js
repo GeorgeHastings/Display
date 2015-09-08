@@ -4,7 +4,7 @@ var Events = [];
 var Images = [];
 var Calendars  = {
 	own: 'primary',
-	support: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
+	support: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
 	creativeConnections: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
@@ -186,7 +186,7 @@ var getRequest = function(calendar) {
     'timeMin': (new Date()).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 10,
+    'maxResults': 15,
     'orderBy': 'startTime'
   });
   return request;
@@ -222,6 +222,7 @@ function listAllEvents() {
   }, 2000);
 }
 
-// setInterval(function(){
-// 	location.reload();
-// }, 30000);
+setInterval(function(){
+	Events = [];
+	listAllEvents();
+}, 30000);
