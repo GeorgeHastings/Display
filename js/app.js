@@ -83,8 +83,8 @@ var sortEventsByTime = function() {
 	});
 };
 
-var renderEvents = function() {
-	for(var i = 0; i < Events.length; i++) {
+var renderEvents = function(amt) {
+	for(var i = 0; i < amt; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
 	
@@ -186,7 +186,7 @@ var getRequest = function(calendar) {
     'timeMin': (new Date()).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 5,
+    'maxResults': 10,
     'orderBy': 'startTime'
   });
   return request;
@@ -217,7 +217,7 @@ function listAllEvents() {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents();
+      renderEvents(10);
       fetchImages();
   }, 2000);
 }
