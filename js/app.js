@@ -31,10 +31,25 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 
 Event.prototype.getColor = function() {
 	if(this.calendar === 'NY Support') {
-		return '#EA643B';
+		return '#255887';
 	}
 	if(this.calendar === 'NY - Creative Connections') {
-		return '#4BC4A4';
+		return '#DE6B48';
+	}
+	if(this.calendar === 'NY - Internal') {
+		return '#25CED1';
+	}
+	if(this.calendar === 'NY - OOO') {
+		return '#379392';
+	}
+	if(this.calendar === 'NY - Visitors') {
+		return '#5995ED';
+	}
+	if(this.calendar === 'NY - External Events') {
+		return '#3F5478';
+	}
+	if(this.calendar === 'NY - Project Events') {
+		return '#E6AF2E';
 	}
 	else {
 		return 'rgb(0,155,255)';
@@ -174,6 +189,7 @@ var getSortIndex = function(thisEvent) {
 var buildEvents = function(events) {
     for (var i = 0; i < events.length; i++) {
 	  	var thisEvent = events[i];
+	  	console.log(thisEvent);
 		var summary = thisEvent.summary;
 		var day = getDisplayTime(thisEvent)[0];
 		var date = getDisplayTime(thisEvent)[1];
