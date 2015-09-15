@@ -4,11 +4,13 @@ var Events = [];
 var Images = [];
 var Calendars  = {
 	own: 'primary',
-	support: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
+	support: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	creativeConnections: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
-	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com'
+	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
+	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
+	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
 };
 
 var UI = {
@@ -29,10 +31,25 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 
 Event.prototype.getColor = function() {
 	if(this.calendar === 'NY Support') {
-		return '#A367C6';
+		return '#255887';
 	}
 	if(this.calendar === 'NY - Creative Connections') {
-		return '#4BC4A4';
+		return '#DE6B48';
+	}
+	if(this.calendar === 'NY - Internal') {
+		return '#25CED1';
+	}
+	if(this.calendar === 'NY - OOO') {
+		return '#379392';
+	}
+	if(this.calendar === 'NY - Visitors') {
+		return '#5995ED';
+	}
+	if(this.calendar === 'NY - External Events') {
+		return '#3F5478';
+	}
+	if(this.calendar === 'NY - Project Events') {
+		return '#E6AF2E';
 	}
 	else {
 		return 'rgb(0,155,255)';
@@ -54,12 +71,12 @@ Event.prototype.getImage = function() {
 	callAjax(emailName, this.handler);
 };
 
-function callAjax(emailName, callback){
+var callAjax = function(emailName, callback){
   var c = new XMLHttpRequest;
   c.onload = callback;
   c.open('GET', 'http://localhost:1235/api/teammembers?limit=10&offset=0&email='+emailName+'%40ideo.com');
   c.send();
-}
+};
 
 var fetchImages = function() {
 	for(var i = 0; i < Events.length; i++) {
@@ -104,7 +121,7 @@ var renderEvents = function(amt) {
 	}
 };
 
-function getEventDay(thisEvent) {
+var getEventDay = function(thisEvent) {
   var when;
   if(thisEvent.start.dateTime) {
     when = thisEvent.start.dateTime;
@@ -113,9 +130,9 @@ function getEventDay(thisEvent) {
     when = thisEvent.start.date;
   }
   return moment(when);
-}
+};
 
-function getDisplayTime(thisEvent) {
+var getDisplayTime = function(thisEvent) {
   if(thisEvent.start.dateTime) {
     var day = moment(thisEvent.start.dateTime).format('ddd');
     var date = moment(thisEvent.start.dateTime).format('D');
@@ -129,9 +146,9 @@ function getDisplayTime(thisEvent) {
     var date = moment(when).format('D');
     return [day, date, 'All day'];
   } 
-}
+};
 
-function getCreator(thisEvent) {
+var getCreator = function(thisEvent) {
   var creator;
   if(thisEvent.creator.email) {
     creator = thisEvent.creator.email;
@@ -140,9 +157,9 @@ function getCreator(thisEvent) {
     creator = thisEvent.organizer.email;
   }
   return creator;
-}
+};
 
-function getLocation(thisEvent) {
+var getLocation = function(thisEvent) {
   var where;
   if(thisEvent.location) {
     where = thisEvent.location;
@@ -151,9 +168,9 @@ function getLocation(thisEvent) {
     where = 'New York';
   }
   return where;
-}
+};
 
-function getSortIndex(thisEvent) {
+var getSortIndex = function(thisEvent) {
   var date;
   if(thisEvent.start.dateTime) {
     date = moment(thisEvent.start.dateTime);
@@ -163,9 +180,9 @@ function getSortIndex(thisEvent) {
   }
   var sortIndex = date.format('DD') + date.format('HH mm');
   return parseInt(sortIndex);
-}
+};
 
-function buildEvents(events) {
+var buildEvents = function(events) {
     for (var i = 0; i < events.length; i++) {
 	  	var thisEvent = events[i];
 		var summary = thisEvent.summary;
@@ -179,7 +196,7 @@ function buildEvents(events) {
 
 		Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
 	}
-}
+};
 
 var getRequest = function(calendar) {
   var request = gapi.client.calendar.events.list({
@@ -193,37 +210,26 @@ var getRequest = function(calendar) {
   return request;
 };
 
-var listUpcomingPrimaryEvents = function() {
-  getRequest(Calendars.own).execute(function(resp) {
+var listUpComingEvents = function(calendar) {
+  getRequest(Calendars[calendar]).execute(function(resp) {
     buildEvents(resp.items);
   });
 };
 
-var listUpcomingSupportEvents = function() {
-  getRequest(Calendars.support).execute(function(resp) {
-    buildEvents(resp.items);
-  });
-};
+var listAllEvents = function () {
 
-var listUpcomingCreativeConnectionsEvents = function() {
-  getRequest(Calendars.creativeConnections).execute(function(resp) {
-    buildEvents(resp.items);
-  });
-};
-
-function listAllEvents() {
-  listUpcomingPrimaryEvents();
-  listUpcomingSupportEvents();
-  listUpcomingCreativeConnectionsEvents();
+  for(var calendar in Calendars) {
+    listUpComingEvents(calendar);
+  }
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(10);
+      renderEvents(20);
       fetchImages();
   }, 2000);
-}
+};
 
-setInterval(function(){
-	Events = [];
-	listAllEvents();
-}, 30000);
+// setInterval(function(){
+// 	Events = [];
+// 	listAllEvents();
+// }, 30000);
