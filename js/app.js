@@ -224,7 +224,7 @@ var listAllEvents = function () {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(20);
+      renderEvents(25);
       fetchImages();
   }, 2000);
 };

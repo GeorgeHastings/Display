@@ -51,12 +51,12 @@ h2 {
     width: 20%;
     float: left; }
     .week-container li + li {
-      padding-left: 1vw; }
+      padding-left: 0.5vw; }
 
 .event {
   display: block; }
   .event + .event {
-    margin-top: 1vw; }
+    margin-top: 0.25vw; }
   .event-content {
     float: left;
     max-width: 80%; }
@@ -83,7 +83,7 @@ h2 {
 .event-info {
   float: right;
   width: 100%;
-  padding: 2vw;
+  padding: 1.5vw;
   color: #fff;
   background: #009bff;
   border-radius: 5px; }
