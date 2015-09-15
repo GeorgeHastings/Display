@@ -104,7 +104,10 @@ var renderEvents = function(amt) {
 	for(var i = 0; i < amt; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
-		var container = document.getElementById(thisEvent.day);
+		var container;
+		if(thisEvent.day) {
+			container = document.getElementById(thisEvent.day);
+		}
 	
 		if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
 			template.querySelector('.event-day').innerHTML = thisEvent.day;
@@ -118,7 +121,7 @@ var renderEvents = function(amt) {
 		// template.querySelector('img').setAttribute('data-person', thisEvent.creator);
 		template.querySelector('.event-info').style.background = thisEvent.getColor();
 		
-		if(container) {
+		if(thisEvent.day) {
 			container.appendChild(template);
 		}
 		else {
