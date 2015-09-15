@@ -4,11 +4,13 @@ var Events = [];
 var Images = [];
 var Calendars  = {
 	own: 'primary',
-	support: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
+	support: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	creativeConnections: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
-	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com'
+	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
+	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
+	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
 };
 
 var UI = {
@@ -99,11 +101,16 @@ var renderEvents = function(amt) {
 		template.querySelector('.event-time').innerHTML = thisEvent.time;
 		template.querySelector('img').setAttribute('data-person', thisEvent.creator);
 		template.querySelector('.event-info').style.background = thisEvent.getColor();
+
+		if(thisEvent.time === 'All day') {
+			template.querySelector('.event').className += ' all-day';
+		}
+
 		UI.eventContainer.appendChild(template);
 	}
 };
 
-function getEventDay(thisEvent) {
+var getEventDay = function(thisEvent) {
   var when;
   if(thisEvent.start.dateTime) {
     when = thisEvent.start.dateTime;
@@ -112,9 +119,9 @@ function getEventDay(thisEvent) {
     when = thisEvent.start.date;
   }
   return moment(when);
-}
+};
 
-function getDisplayTime(thisEvent) {
+var getDisplayTime = function(thisEvent) {
   if(thisEvent.start.dateTime) {
     var day = moment(thisEvent.start.dateTime).format('ddd');
     var date = moment(thisEvent.start.dateTime).format('D');
@@ -128,9 +135,9 @@ function getDisplayTime(thisEvent) {
     var date = moment(when).format('D');
     return [day, date, 'All day'];
   } 
-}
+};
 
-function getCreator(thisEvent) {
+var getCreator = function(thisEvent) {
   var creator;
   if(thisEvent.creator.email) {
     creator = thisEvent.creator.email;
@@ -139,9 +146,9 @@ function getCreator(thisEvent) {
     creator = thisEvent.organizer.email;
   }
   return creator;
-}
+};
 
-function getLocation(thisEvent) {
+var getLocation = function(thisEvent) {
   var where;
   if(thisEvent.location) {
     where = thisEvent.location;
@@ -150,9 +157,9 @@ function getLocation(thisEvent) {
     where = 'New York';
   }
   return where;
-}
+};
 
-function getSortIndex(thisEvent) {
+var getSortIndex = function(thisEvent) {
   var date;
   if(thisEvent.start.dateTime) {
     date = moment(thisEvent.start.dateTime);
@@ -162,9 +169,9 @@ function getSortIndex(thisEvent) {
   }
   var sortIndex = date.format('DD') + date.format('HH mm');
   return parseInt(sortIndex);
-}
+};
 
-function buildEvents(events) {
+var buildEvents = function(events) {
     for (var i = 0; i < events.length; i++) {
 	  	var thisEvent = events[i];
 		var summary = thisEvent.summary;
@@ -178,7 +185,7 @@ function buildEvents(events) {
 
 		Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
 	}
-}
+};
 
 var getRequest = function(calendar) {
   var request = gapi.client.calendar.events.list({
@@ -192,37 +199,26 @@ var getRequest = function(calendar) {
   return request;
 };
 
-var listUpcomingPrimaryEvents = function() {
-  getRequest(Calendars.own).execute(function(resp) {
+var listUpComingEvents = function(calendar) {
+  getRequest(Calendars[calendar]).execute(function(resp) {
     buildEvents(resp.items);
   });
 };
 
-var listUpcomingSupportEvents = function() {
-  getRequest(Calendars.support).execute(function(resp) {
-    buildEvents(resp.items);
-  });
-};
+var listAllEvents = function () {
 
-var listUpcomingCreativeConnectionsEvents = function() {
-  getRequest(Calendars.creativeConnections).execute(function(resp) {
-    buildEvents(resp.items);
-  });
-};
-
-function listAllEvents() {
-  listUpcomingPrimaryEvents();
-  listUpcomingSupportEvents();
-  listUpcomingCreativeConnectionsEvents();
+  for(var calendar in Calendars) {
+    listUpComingEvents(calendar);
+  }
 
   setTimeout(function(){
   	  sortEventsByTime();
       renderEvents(10);
       fetchImages();
   }, 2000);
-}
+};
 
-setInterval(function(){
-	Events = [];
-	listAllEvents();
-}, 30000);
+// setInterval(function(){
+// 	Events = [];
+// 	listAllEvents();
+// }, 30000);

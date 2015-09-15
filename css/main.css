@@ -44,10 +44,14 @@ h2 {
   clear: both; }
 
 .event-container {
+  display: flex;
+  flex-direction: column;
   padding: 2.5vw 0; }
 
 .event {
   display: block; }
+  .event.all-day .event-info {
+    font-size: 8px; }
   .event + .event {
     margin-top: 2.5vw; }
   .event-content {

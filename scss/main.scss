@@ -58,12 +58,18 @@ h2 {
 }
 
 .event-container {
+	display: flex;
+	flex-direction: column;
 	padding: 2.5vw 0;
 }
 
 .event {
 	display: block;
 	@extend .clearfix;
+
+	&.all-day .event-info{
+		font-size: 8px;
+	}
 
 	& + .event {
 		margin-top: 2.5vw;
