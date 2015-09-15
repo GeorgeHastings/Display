@@ -9,7 +9,7 @@ var Calendars  = {
 	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
-	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
+	// ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
 	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
 };
 
@@ -113,11 +113,17 @@ var renderEvents = function(amt) {
 
 		template.querySelector('.event').id = thisEvent.id;
 		template.querySelector('.event-title').innerHTML = thisEvent.summary;
-		template.querySelector('.event-location').innerHTML = thisEvent.where;
 		template.querySelector('.event-time').innerHTML = thisEvent.time;
-		template.querySelector('img').setAttribute('data-person', thisEvent.creator);
+		// template.querySelector('.event-location').innerHTML = thisEvent.where;
+		// template.querySelector('img').setAttribute('data-person', thisEvent.creator);
 		template.querySelector('.event-info').style.background = thisEvent.getColor();
-		container.appendChild(template);
+		
+		if(container) {
+			container.appendChild(template);
+		}
+		else {
+			return;
+		}
 	}
 };
 
@@ -183,18 +189,23 @@ var getSortIndex = function(thisEvent) {
 };
 
 var buildEvents = function(events) {
-    for (var i = 0; i < events.length; i++) {
-	  	var thisEvent = events[i];
-		var summary = thisEvent.summary;
-		var day = getDisplayTime(thisEvent)[0];
-		var date = getDisplayTime(thisEvent)[1];
-		var time = getDisplayTime(thisEvent)[2];
-		var where = getLocation(thisEvent);
-		var creator = getCreator(thisEvent);
-		var calendar = thisEvent.organizer.displayName;
-		var sortIndex = getSortIndex(thisEvent);
+	if(events) {
+		for (var i = 0; i < events.length; i++) {
+		  	var thisEvent = events[i];
+			var summary = thisEvent.summary;
+			var day = getDisplayTime(thisEvent)[0];
+			var date = getDisplayTime(thisEvent)[1];
+			var time = getDisplayTime(thisEvent)[2];
+			var where = getLocation(thisEvent);
+			var creator = getCreator(thisEvent);
+			var calendar = thisEvent.organizer.displayName;
+			var sortIndex = getSortIndex(thisEvent);
 
-		Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
+			Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
+		}
+	}    
+	else {
+		return;
 	}
 };
 
@@ -202,6 +213,7 @@ var getRequest = function(calendar) {
   var request = gapi.client.calendar.events.list({
     'calendarId': calendar,
     'timeMin': (new Date()).toISOString(),
+    'timeMax': moment().endOf('isoWeek').toISOString(),
     'showDeleted': false,
     'singleEvents': true,
     'maxResults': 15,
@@ -224,8 +236,8 @@ var listAllEvents = function () {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(25);
-      fetchImages();
+      renderEvents(30);
+      // fetchImages();
   }, 2000);
 };
 
