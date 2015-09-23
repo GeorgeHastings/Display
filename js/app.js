@@ -1,7 +1,6 @@
 'use strict';
 
 var Events = [];
-var Images = [];
 var Calendars  = {
 	own: 'primary',
 	support: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
@@ -66,24 +65,24 @@ Event.prototype.handler = function(e) {
 	}	
 };
 
-Event.prototype.getImage = function() {
-	var emailName = parseEmail(this.creator);
-	callAjax(emailName, this.handler);
-};
+// Event.prototype.getImage = function() {
+// 	var emailName = parseEmail(this.creator);
+// 	callAjax(emailName, this.handler);
+// };
 
-var callAjax = function(emailName, callback){
-  var c = new XMLHttpRequest;
-  c.onload = callback;
-  c.open('GET', 'http://localhost:1235/api/teammembers?limit=10&offset=0&email='+emailName+'%40ideo.com');
-  c.send();
-};
+// var callAjax = function(emailName, callback){
+//   var c = new XMLHttpRequest;
+//   c.onload = callback;
+//   c.open('GET', 'http://localhost:1235/api/teammembers?limit=10&offset=0&email='+emailName+'%40ideo.com');
+//   c.send();
+// };
 
-var fetchImages = function() {
-	for(var i = 0; i < Events.length; i++) {
-		var thisEvent = Events[i];
-		thisEvent.getImage();
-	}
-};
+// var fetchImages = function() {
+// 	for(var i = 0; i < Events.length; i++) {
+// 		var thisEvent = Events[i];
+// 		thisEvent.getImage();
+// 	}
+// };
 
 var parseCreatorName = function(creator) {
 		creator = creator.replace(/\s/g, '');
