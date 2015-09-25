@@ -3,14 +3,11 @@
 var Events = [];
 var Images = [];
 var Calendars  = {
-	own: 'primary',
-	support: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
-	creativeConnections: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
-	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
-	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
+	// ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
+	// visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
 };
 
 var UI = {
@@ -31,28 +28,25 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 
 Event.prototype.getColor = function() {
 	if(this.calendar === 'NY Support') {
-		return '#255887';
-	}
-	if(this.calendar === 'NY - Creative Connections') {
-		return '#DE6B48';
+		return '#33AD9B';
 	}
 	if(this.calendar === 'NY - Internal') {
-		return '#25CED1';
+		return '#64BDE3';
 	}
-	if(this.calendar === 'NY - OOO') {
-		return '#379392';
+	if(this.calendar === 'NY - OOO' || this.calendar === 'NYC Staff Vacations') {
+		return 'brown';
 	}
 	if(this.calendar === 'NY - Visitors') {
-		return '#5995ED';
+		return '#F37F82';
 	}
 	if(this.calendar === 'NY - External Events') {
-		return '#3F5478';
+		return '#9BCE7A';
 	}
-	if(this.calendar === 'NY - Project Events') {
-		return '#E6AF2E';
+	if(this.calendar === 'NY - Client Events') {
+		return '#F6A23E';
 	}
 	else {
-		return 'rgb(0,155,255)';
+		return 'black';
 	}
 };
 
@@ -182,14 +176,14 @@ var getSortIndex = function(thisEvent) {
   else {
     date = moment(thisEvent.start.date);
   }
-  var sortIndex = date.format('DD') + date.format('HH mm');
+  var sortIndex = date.format('MM') + date.format('DD') + date.format('HH mm');
   return parseInt(sortIndex);
 };
 
 var buildEvents = function(events) {
     for (var i = 0; i < events.length; i++) {
 	  	var thisEvent = events[i];
-	  	console.log(thisEvent);
+	  	// console.log(thisEvent);
 		var summary = thisEvent.summary;
 		var day = getDisplayTime(thisEvent)[0];
 		var date = getDisplayTime(thisEvent)[1];
@@ -209,7 +203,7 @@ var getRequest = function(calendar) {
     'timeMin': (new Date()).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 15,
+    'maxResults': 10,
     'orderBy': 'startTime'
   });
   return request;
@@ -217,7 +211,9 @@ var getRequest = function(calendar) {
 
 var listUpComingEvents = function(calendar) {
   getRequest(Calendars[calendar]).execute(function(resp) {
-    buildEvents(resp.items);
+    if(resp.items) {
+    	buildEvents(resp.items);
+    }	
   });
 };
 

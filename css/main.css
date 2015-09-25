@@ -53,7 +53,7 @@ h2 {
   .event.all-day .event-info {
     font-size: 8px; }
   .event + .event {
-    margin-top: 2.5vw; }
+    margin-top: 1.5vw; }
   .event-content {
     float: left;
     max-width: 80%; }
