@@ -2,9 +2,6 @@
 
 var Events = [];
 var Calendars  = {
-	own: 'primary',
-	support: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
-	creativeConnections: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
@@ -65,25 +62,6 @@ Event.prototype.handler = function(e) {
 	}	
 };
 
-// Event.prototype.getImage = function() {
-// 	var emailName = parseEmail(this.creator);
-// 	callAjax(emailName, this.handler);
-// };
-
-// var callAjax = function(emailName, callback){
-//   var c = new XMLHttpRequest;
-//   c.onload = callback;
-//   c.open('GET', 'http://localhost:1235/api/teammembers?limit=10&offset=0&email='+emailName+'%40ideo.com');
-//   c.send();
-// };
-
-// var fetchImages = function() {
-// 	for(var i = 0; i < Events.length; i++) {
-// 		var thisEvent = Events[i];
-// 		thisEvent.getImage();
-// 	}
-// };
-
 var parseCreatorName = function(creator) {
 		creator = creator.replace(/\s/g, '');
 		return creator;
@@ -113,8 +91,6 @@ var renderEvents = function(amt) {
 		template.querySelector('.event').id = thisEvent.id;
 		template.querySelector('.event-title').innerHTML = thisEvent.summary;
 		template.querySelector('.event-time').innerHTML = thisEvent.time;
-		// template.querySelector('.event-location').innerHTML = thisEvent.where;
-		// template.querySelector('img').setAttribute('data-person', thisEvent.creator);
 		template.querySelector('.event-info').style.background = thisEvent.getColor();
 		
 		if(container) {
@@ -183,7 +159,7 @@ var getSortIndex = function(thisEvent) {
   else {
     date = moment(thisEvent.start.date);
   }
-  var sortIndex = date.format('DD') + date.format('HH mm');
+  var sortIndex = date.format('MM') + date.format('DD') + date.format('HH mm');
   return parseInt(sortIndex);
 };
 
@@ -211,7 +187,7 @@ var buildEvents = function(events) {
 var getRequest = function(calendar) {
   var request = gapi.client.calendar.events.list({
     'calendarId': calendar,
-    'timeMin': (new Date()).toISOString(),
+    'timeMin': moment().format(),
     'timeMax': moment().endOf('isoWeek').toISOString(),
     'showDeleted': false,
     'singleEvents': true,
@@ -236,11 +212,5 @@ var listAllEvents = function () {
   setTimeout(function(){
   	  sortEventsByTime();
       renderEvents(30);
-      // fetchImages();
   }, 2000);
 };
-
-// setInterval(function(){
-// 	Events = [];
-// 	listAllEvents();
-// }, 30000);
