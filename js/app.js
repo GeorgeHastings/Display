@@ -183,7 +183,6 @@ var getSortIndex = function(thisEvent) {
 var buildEvents = function(events) {
     for (var i = 0; i < events.length; i++) {
 	  	var thisEvent = events[i];
-	  	// console.log(thisEvent);
 		var summary = thisEvent.summary;
 		var day = getDisplayTime(thisEvent)[0];
 		var date = getDisplayTime(thisEvent)[1];
@@ -230,7 +229,7 @@ var listAllEvents = function () {
   }, 2000);
 };
 
-// setInterval(function(){
-// 	Events = [];
-// 	listAllEvents();
-// }, 30000);
+setInterval(function(){
+	Events = [];
+	listAllEvents();
+}, 30000);
