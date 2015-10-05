@@ -247,6 +247,17 @@
 		"outputStyle": 1,
 		"syntaxCheckerStyle": 1
 		},
+	"\/assets\/images\/displaybg.png": {
+		"fileType": 32768,
+		"ignore": 0,
+		"ignoreWasSetByUser": 0,
+		"initialSize": 417868,
+		"inputAbbreviatedPath": "\/assets\/images\/displaybg.png",
+		"outputAbbreviatedPath": "\/assets\/images\/displaybg.png",
+		"outputPathIsOutsideProject": 0,
+		"outputPathIsSetByUser": 0,
+		"processed": 0
+		},
 	"\/css\/main.css": {
 		"fileType": 16,
 		"ignore": 1,

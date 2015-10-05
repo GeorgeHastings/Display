@@ -140,7 +140,7 @@ var renderEvents = function(amt) {
 		template.querySelector('.event-title').innerHTML = thisEvent.summary;
 		template.querySelector('.event-location').innerHTML = thisEvent.where;
 		template.querySelector('.event-time').innerHTML = thisEvent.time;
-		template.querySelector('.event-info').style.background = thisEvent.getColor();
+		// template.querySelector('.event-info').style.background = thisEvent.getColor();
 
 		if(thisEvent.time === 'All day') {
 			template.querySelector('.event').className += ' all-day';
