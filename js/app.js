@@ -1,7 +1,7 @@
 'use strict';
 
 var Events = [];
-var Images = [];
+var OutOfOffice = [];
 var Calendars  = {
 	internal: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
@@ -15,7 +15,7 @@ var UI = {
 	eventContainer: document.getElementById('event-container')
 };
 
-var Event = function(summary, day, date, time, where, creator, calendar, sortIndex) {
+var Event = function(summary, day, date, time, where, creator, calendar, sortIndex, dateMonthDay) {
 	this.summary = summary;
 	this.day = day;
 	this.date = date;
@@ -24,6 +24,7 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 	this.where = where;
 	this.calendar = calendar;
 	this.sortIndex = sortIndex;
+	this.dateMonthDay = dateMonthDay;
 };
 
 Event.prototype.getColor = function() {
@@ -94,6 +95,17 @@ var sortEventsByTime = function() {
 	});
 };
 
+var renderOutOfOffice = function(thisEvent) {
+	var OutOfOfficePeople = '';
+
+	for(var i = 0; i < OutOfOffice.length; i++) {
+		if(getSortIndex(OutOfOffice[i]) < thisEvent.sortIndex && getDisplayTime(OutOfOffice[i])[3] > thisEvent.dateMonthDay) {
+			OutOfOfficePeople += '<img data-person="'+OutOfOffice[i].attendees[0].displayName+'">';
+		}
+	}
+	return OutOfOfficePeople;
+};
+
 var renderEvents = function(amt) {
 	for(var i = 0; i < amt; i++) {
 		var thisEvent = Events[i];
@@ -102,13 +114,14 @@ var renderEvents = function(amt) {
 		if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
 			template.querySelector('.event-day').innerHTML = thisEvent.day;
 			template.querySelector('.event-date').innerHTML = thisEvent.date;
+			template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
 		}
 
 		template.querySelector('.event').id = thisEvent.id;
 		template.querySelector('.event-title').innerHTML = thisEvent.summary;
 		template.querySelector('.event-location').innerHTML = thisEvent.where;
 		template.querySelector('.event-time').innerHTML = thisEvent.time;
-		template.querySelector('img').setAttribute('data-person', thisEvent.creator);
+		// template.querySelector('img').setAttribute('data-person', thisEvent.creator);
 		template.querySelector('.event-info').style.background = thisEvent.getColor();
 
 		if(thisEvent.time === 'All day') {
@@ -136,13 +149,16 @@ var getDisplayTime = function(thisEvent) {
     var date = moment(thisEvent.start.dateTime).format('D');
     var start = moment(thisEvent.start.dateTime);
     var end = moment(thisEvent.end.dateTime);
-    return [day, date, ''+start.format('h:mm')+' - '+end.format('h:mm a')+''];
+    var dateMonthDay = moment(thisEvent.start.dateTime).format('MDD');
+    return [day, date, ''+start.format('h:mm')+' - '+end.format('h:mm a')+'', dateMonthDay];
   }
   else {
     var when = thisEvent.start.date;
+    var end = moment(thisEvent.end.date).format('MDD');
     var day = moment(when).format('ddd');
     var date = moment(when).format('D');
-    return [day, date, 'All day'];
+    var dateMonthDay = moment(thisEvent.start.date).format('MDD');
+    return [day, date, 'All day', end];
   } 
 };
 
@@ -187,12 +203,20 @@ var buildEvents = function(events) {
 		var day = getDisplayTime(thisEvent)[0];
 		var date = getDisplayTime(thisEvent)[1];
 		var time = getDisplayTime(thisEvent)[2];
+		var dateMonthDay = getDisplayTime(thisEvent)[3];
 		var where = getLocation(thisEvent);
 		var creator = getCreator(thisEvent);
 		var calendar = thisEvent.organizer.displayName;
 		var sortIndex = getSortIndex(thisEvent);
 
-		Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
+		Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex, dateMonthDay));
+	}
+};
+
+var buildOutOfOffice = function(events) {
+	for (var i = 0; i < events.length; i++) {
+		var thisOutOfOffice = events[i];
+		OutOfOffice.push(thisOutOfOffice);
 	}
 };
 
@@ -210,7 +234,10 @@ var getRequest = function(calendar) {
 
 var listUpComingEvents = function(calendar) {
   getRequest(Calendars[calendar]).execute(function(resp) {
-    if(resp.items) {
+    if(resp.summary === 'NY - OOO') {
+    	buildOutOfOffice(resp.items);
+    }
+    else {
     	buildEvents(resp.items);
     }	
   });
@@ -225,7 +252,7 @@ var listAllEvents = function () {
   setTimeout(function(){
   	  sortEventsByTime();
       renderEvents(20);
-      fetchImages();
+      // fetchImages();
   }, 2000);
 };
 

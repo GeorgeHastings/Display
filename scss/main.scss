@@ -110,10 +110,10 @@ h2 {
 }
 
 .event-info {
-	float: right;
-	width: 80vw;
+	// float: right;
+	width: 90vw;
 	padding: 2.5vw;
-	margin-right: 5vw;
+	margin: 0 5vw;
 	color: #fff;
 	background: rgb(0,155,255);
 	border-radius: 5px;
@@ -121,12 +121,15 @@ h2 {
 }
 
 .date-container {
-	width: 15vw;
+	width: 100vw;
 	font-size: 1.5em;
-	// margin-left: 5vw;
-	float: left;
+	// float: left;
 	text-align: center;
 	@extend .clearfix;
+
+	.ooo-container {
+		font-size: 12px;
+	}
 }
 
 .portrait {

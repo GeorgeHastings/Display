@@ -77,19 +77,19 @@ h2 {
     line-height: 1.7em; }
 
 .event-info {
-  float: right;
-  width: 80vw;
+  width: 90vw;
   padding: 2.5vw;
-  margin-right: 5vw;
+  margin: 0 5vw;
   color: #fff;
   background: #009bff;
   border-radius: 5px; }
 
 .date-container {
-  width: 15vw;
+  width: 100vw;
   font-size: 1.5em;
-  float: left;
   text-align: center; }
+  .date-container .ooo-container {
+    font-size: 12px; }
 
 .portrait {
   float: right;
