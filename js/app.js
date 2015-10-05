@@ -3,11 +3,11 @@
 var Events = [];
 var Images = [];
 var Calendars  = {
-	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
+	internal: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
-	// ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
-	// visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
+	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
+	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
 };
 
 var UI = {
@@ -30,7 +30,7 @@ Event.prototype.getColor = function() {
 	if(this.calendar === 'NY Support') {
 		return '#33AD9B';
 	}
-	if(this.calendar === 'NY - Internal') {
+	if(this.calendar === 'NY - Internal Events' || this.calendar === 'NY - Internal') {
 		return '#64BDE3';
 	}
 	if(this.calendar === 'NY - OOO' || this.calendar === 'NYC Staff Vacations') {
@@ -42,7 +42,7 @@ Event.prototype.getColor = function() {
 	if(this.calendar === 'NY - External Events') {
 		return '#9BCE7A';
 	}
-	if(this.calendar === 'NY - Client Events') {
+	if(this.calendar === 'NY - Client Events' || this.calendar === 'NY - Projects') {
 		return '#F6A23E';
 	}
 	else {
@@ -224,12 +224,12 @@ var listAllEvents = function () {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(10);
+      renderEvents(20);
       fetchImages();
   }, 2000);
 };
 
-setInterval(function(){
-	Events = [];
-	listAllEvents();
-}, 30000);
+// setInterval(function(){
+// 	Events = [];
+// 	listAllEvents();
+// }, 30000);
