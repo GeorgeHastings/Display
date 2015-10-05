@@ -9,8 +9,8 @@ body {
 
 body {
   font: 19px / 27px 'Gotham';
-  color: #132033;
-  background: #fafafa; }
+  color: #fff;
+  background: #2a2a2a; }
 
 ul,
 dl {
@@ -38,7 +38,7 @@ h2 {
 .center-text {
   text-align: center; }
 
-.clearfix:after, .event:after, .event-info:after, .date-container:after {
+.clearfix:after, .event:after, .event-info:after, .date-container:after, .date-container .ooo-container:after {
   content: "";
   display: table;
   clear: both; }
@@ -60,7 +60,7 @@ h2 {
   .event-date {
     font-size: 2.2em;
     line-height: 1em;
-    font-weight: 500; }
+    font-weight: 400; }
   .event-day {
     font-size: 1em;
     line-height: 1em;
@@ -85,11 +85,27 @@ h2 {
   border-radius: 5px; }
 
 .date-container {
-  width: 100vw;
+  display: none;
+  width: 90vw;
+  margin: 5vw 5vw;
   font-size: 1.5em;
-  text-align: center; }
+  border-bottom: 2px solid #fff; }
   .date-container .ooo-container {
-    font-size: 12px; }
+    font-size: 12px;
+    margin: 3vw 0; }
+    .date-container .ooo-container:before {
+      content: 'OOO';
+      float: left;
+      font-size: 2em;
+      line-height: 50px;
+      margin-right: 2vw; }
+  .date-container .ooo-container img {
+    float: left;
+    width: 50px;
+    height: 50px;
+    margin-right: 1vw;
+    border-radius: 50%;
+    overflow: hidden; }
 
 .portrait {
   float: right;

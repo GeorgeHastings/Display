@@ -11,8 +11,8 @@ body {
 
 body {
 	font: 19px / 27px 'Gotham';
-	color: $deepblue;
-	background: #fafafa;
+	color: #fff;
+	background: #2a2a2a;
 }
 
 
@@ -83,7 +83,7 @@ h2 {
 	&-date {
 		font-size: 2.2em;
 		line-height: 1em;
-		font-weight: 500;
+		font-weight: 400;
 	}
 
 	&-day {
@@ -110,7 +110,6 @@ h2 {
 }
 
 .event-info {
-	// float: right;
 	width: 90vw;
 	padding: 2.5vw;
 	margin: 0 5vw;
@@ -121,14 +120,35 @@ h2 {
 }
 
 .date-container {
-	width: 100vw;
+	display: none;
+	width: 90vw;
+	margin: 5vw 5vw;
 	font-size: 1.5em;
-	// float: left;
-	text-align: center;
+	border-bottom: 2px solid #fff;
+	// text-align: center;
 	@extend .clearfix;
 
 	.ooo-container {
 		font-size: 12px;
+		margin: 3vw 0;
+		@extend .clearfix;
+
+		&:before {
+			content: 'OOO';
+			float: left;
+			font-size: 2em;
+			line-height: 50px;
+			margin-right: 2vw;
+		}
+	}
+
+	.ooo-container img {
+		float: left;
+		width: 50px;
+		height: 50px;
+		margin-right: 1vw;
+		border-radius: 50%;
+		overflow: hidden;
 	}
 }
 
