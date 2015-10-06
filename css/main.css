@@ -75,11 +75,13 @@ h2 {
     font-weight: 500;
     line-height: 1.3em;
     margin-top: 0;
-    margin-bottom: 1em;
+    margin-bottom: 0;
     word-break: break-word; }
   .event-time, .event-location {
     font-size: 1.7em;
     line-height: 1.7em; }
+  .event-time {
+    margin-top: 1em; }
 
 .event-info {
   float: right;

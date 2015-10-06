@@ -2,10 +2,10 @@
 
 var Events = [];
 var Calendars  = {
-	internal: 'ideo.com_3ksmp10u6g268lutghfpb8bkl4@group.calendar.google.com',
+	internal: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
-	// ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
+	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
 	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
 };
 
@@ -86,6 +86,10 @@ var renderEvents = function(amt) {
 		if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
 			template.querySelector('.event-day').innerHTML = thisEvent.day;
 			template.querySelector('.event-date').innerHTML = thisEvent.date;
+		}
+
+		if(thisEvent.time === 'All day') {
+			template.querySelector('.event-time').style.display = 'none';
 		}
 
 		template.querySelector('.event').id = thisEvent.id;
