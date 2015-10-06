@@ -13,9 +13,9 @@ body {
 body {
 	font: 19px / 27px 'Gotham';
 	color: #fff;
-	background: #222;
+	background: #151515;
+	background-size: cover;
 }
-
 
 ul,
 dl {
@@ -61,7 +61,7 @@ h2 {
 .event-container {
 	display: flex;
 	flex-direction: column;
-	padding: 2.5vw 0;
+	padding-bottom: 2.5vw;
 }
 
 .event {
@@ -69,11 +69,11 @@ h2 {
 	@extend .clearfix;
 
 	&.all-day .event-info{
-		font-size: 8px;
+		// font-size: 8px;
 	}
 
 	& + .event {
-		margin-top: 2vw;
+		// margin-top: 3vw;
 	}
 
 	&-content {
@@ -82,7 +82,7 @@ h2 {
 	}
 
 	&-date {
-		font-size: 2.2em;
+		font-size: 2.6em;
 		line-height: 1em;
 		font-weight: 400;
 		color: #fff;
@@ -101,10 +101,10 @@ h2 {
 
 	&-title {
 		font-size: 2.5em;
-		font-weight: 400;
+		font-weight: 200;
 		line-height: 1.3em;
 		margin-top: 0;
-		margin-bottom: 5vw;
+		margin-bottom: 3vw;
 	}
 
 	&-time,
@@ -119,36 +119,43 @@ h2 {
 
 	&-location {
 		color: #999;
+		font-weight: 200;
 	}
 
 }
 
 .event-info {
 	width: 90vw;
-	padding: 2.5vw;
+	padding: 5vw 0 5vw 10vw;
 	margin: 0 5vw;
 	color: #fff;
-	border: 2px solid #444;
 	background-size: cover;
 	border-radius: 5px;
+	animation: load-in 1s ease;
 	@extend .clearfix;
 }
 
 .date-container {
+	position: relative;
 	display: none;
 	width: 90vw;
-	margin: 5vw 5vw;
+	margin: 0 5vw;
+	padding: 10vw 0;
 	font-size: 1.5em;
-	border-bottom: 2px solid #444;
+	border-top: 2px solid #444;
+	animation: load-in 1s ease;
 	// text-align: center;
 	@extend .clearfix;
 
 	.ooo-container {
 		font-size: 12px;
-		margin: 3vw 0;
+		margin-top: 5vw;
+		margin-left: 10vw;
 		@extend .clearfix;
 
 		&:before {
+			position: absolute;
+			left: 0;
 			content: 'OOO';
 			float: left;
 			font-size: 2em;
@@ -167,19 +174,6 @@ h2 {
 	}
 }
 
-.portrait {
-	float: right;
-	width: 100px;
-	max-width: 20%;
-	height: 100px;
-	border-radius: 50%;
-	overflow: hidden;
-
-	img {
-		width: 100%;
-		object-fit: cover;
-	}
-}
 
 @keyframes load-in {
 	0% {
