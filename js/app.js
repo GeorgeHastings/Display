@@ -1,12 +1,11 @@
 'use strict';
 
+var CurrentWeek = 0;
 var Events = [];
 var Calendars  = {
 	internal: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
-	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
-	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
 };
 
 var UI = {
@@ -26,20 +25,14 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 };
 
 Event.prototype.getColor = function() {
-	if(this.calendar === 'NY Support') {
-		return '#255887';
-	}
 	if(this.calendar === 'NY - Creative Connections') {
 		return '#DE6B48';
 	}
-	if(this.calendar === 'NY - Internal') {
+	if(this.calendar === 'NY - Internal' || this.calendar === 'NY - Internal Events') {
 		return '#25CED1';
 	}
-	if(this.calendar === 'NY - OOO') {
+	if(this.calendar === 'NY - OOO' || this.calendar === 'NY - Staff Vacations') {
 		return '#379392';
-	}
-	if(this.calendar === 'NY - Visitors') {
-		return '#5995ED';
 	}
 	if(this.calendar === 'NY - External Events') {
 		return '#3F5478';
@@ -77,16 +70,19 @@ var sortEventsByTime = function() {
 	});
 };
 
+var renderDateTitles = function(weekNum) {
+	var days = document.querySelectorAll('.week-container li');
+	var names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+	for(var i = 0; i < days.length; i++) {
+		days[i].innerHTML += ('<div class="date">'+moment().add(weekNum, 'week').day(names[i]).format('dddd M/D')+'</div>');
+	}
+};
+
 var renderEvents = function(amt) {
 	for(var i = 0; i < amt; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
 		var container = document.getElementById(thisEvent.day);
-	
-		if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
-			template.querySelector('.event-day').innerHTML = thisEvent.day;
-			template.querySelector('.event-date').innerHTML = thisEvent.date;
-		}
 
 		if(thisEvent.time === 'All day') {
 			template.querySelector('.event-time').style.display = 'none';
@@ -103,6 +99,14 @@ var renderEvents = function(amt) {
 		else {
 			return;
 		}
+	}
+};
+
+var clearCalendar = function() {
+	Events = [];
+	var days = document.querySelectorAll('.week-container li');
+	for(var i = 0; i < days.length; i++) {
+		days[i].innerHTML = '';
 	}
 };
 
@@ -188,11 +192,11 @@ var buildEvents = function(events) {
 	}
 };
 
-var getRequest = function(calendar) {
+var getRequest = function(calendar, weekNum) {
   var request = gapi.client.calendar.events.list({
     'calendarId': calendar,
-    'timeMin': moment().format(),
-    'timeMax': moment().endOf('isoWeek').toISOString(),
+    'timeMin': moment().add(weekNum, 'week').format(),
+    'timeMax': moment().add(weekNum+1, 'week').endOf('isoWeek').toISOString(),
     'showDeleted': false,
     'singleEvents': true,
     'maxResults': 15,
@@ -201,20 +205,37 @@ var getRequest = function(calendar) {
   return request;
 };
 
-var listUpComingEvents = function(calendar) {
-  getRequest(Calendars[calendar]).execute(function(resp) {
+var listUpComingEvents = function(calendar, weekNum) {
+  getRequest(Calendars[calendar], weekNum).execute(function(resp) {
     buildEvents(resp.items);
   });
 };
 
-var listAllEvents = function () {
+var listAllEvents = function (weekNum) {
 
   for(var calendar in Calendars) {
-    listUpComingEvents(calendar);
+    listUpComingEvents(calendar, weekNum);
   }
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(30);
+      renderEvents(25);
   }, 2000);
 };
+
+document.addEventListener('DOMContentLoaded', function(){
+	renderDateTitles(0);
+});
+
+document.getElementById('pageCalRight').addEventListener('click', function(){
+	CurrentWeek++;
+	clearCalendar();
+	listAllEvents(CurrentWeek);
+	renderDateTitles(CurrentWeek);
+});
+document.getElementById('pageCalLeft').addEventListener('click', function(){
+	CurrentWeek--;
+	clearCalendar();
+	listAllEvents(CurrentWeek);
+	renderDateTitles(CurrentWeek);
+});
