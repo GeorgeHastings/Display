@@ -1,8 +1,8 @@
 'use strict';
 
 var CLIENT_ID = '1054522317473-1q9d0u8sd9pqv7ie9cuvv27tsi47q9oo.apps.googleusercontent.com';
-
-var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+var API_KEY = 'AIzaSyAxs_n3AiTbY3RAheelNFY-QnPd_g0sC3E';
+var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly','https://www.googleapis.com/auth/admin.directory.user.readonly', 'https://www.googleapis.com/auth/admin.directory.user'];
 
 /**
  * Check if current user has authorized this application.
@@ -11,7 +11,7 @@ function checkAuth() {
   gapi.auth.authorize(
     {
       'client_id': CLIENT_ID,
-      'scope': SCOPES,
+      'scope': SCOPES.join(' '),
       'immediate': true
     }, handleAuthResult);
 }
@@ -27,6 +27,7 @@ function handleAuthResult(authResult) {
     // Hide auth UI, then load client library.
     authorizeDiv.style.display = 'none';
     loadCalendarApi();
+    loadDirectoryApi();
   } else {
     // Show auth UI, allowing the user to initiate authorization by
     // clicking authorize button.
@@ -40,6 +41,7 @@ function handleAuthResult(authResult) {
  * @param {Event} event Button click event.
  */
 function handleAuthClick(event) {
+  // gapi.client.setApiKey(API_KEY);
   gapi.auth.authorize(
     {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
     handleAuthResult);
@@ -52,6 +54,10 @@ function handleAuthClick(event) {
  */
 function loadCalendarApi() {
   gapi.client.load('calendar', 'v3', listAllEvents);
+}
+
+function loadDirectoryApi() {
+  gapi.client.load('admin', 'directory_v1', getProfile);
 }
 
 /**

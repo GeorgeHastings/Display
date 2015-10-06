@@ -28,40 +28,6 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 	this.dateMonthDay = dateMonthDay;
 };
 
-Event.prototype.getColor = function() {
-	if(this.calendar === 'NY Support') {
-		return '#33AD9B';
-	}
-	if(this.calendar === 'NY - Internal Events' || this.calendar === 'NY - Internal') {
-		return '#64BDE3';
-	}
-	if(this.calendar === 'NY - OOO' || this.calendar === 'NYC Staff Vacations') {
-		return 'brown';
-	}
-	if(this.calendar === 'NY - Visitors') {
-		return '#F37F82';
-	}
-	if(this.calendar === 'NY - External Events') {
-		return '#9BCE7A';
-	}
-	if(this.calendar === 'NY - Client Events' || this.calendar === 'NY - Projects') {
-		return '#F6A23E';
-	}
-	else {
-		return 'black';
-	}
-};
-
-// Event.prototype.handler = function(e) {
-// 	var obj = JSON.parse(e.target.response);
-// 	if(obj.results) {
-// 		var set = document.querySelectorAll('[data-person="'+obj.results[0].email+'"]');
-// 		for(var i = 0; i < set.length; i++) {
-// 			set[i].src = ''+obj.results[0].image+'';
-// 		}
-// 	}	
-// };
-
 var handler = function(e) {
 	var obj = JSON.parse(e.target.response);
 	if(obj.results) {
@@ -72,11 +38,6 @@ var handler = function(e) {
 	}	
 };
 
-Event.prototype.getImage = function() {
-	var emailName = parseEmail(this.creator);
-	callAjax(emailName, this.handler);
-};
-
 function callAjax(emailName, callback){
   var c = new XMLHttpRequest;
   c.onload = callback;
@@ -84,12 +45,19 @@ function callAjax(emailName, callback){
   c.send();
 }
 
-// var fetchImages = function() {
-// 	for(var i = 0; i < Events.length; i++) {
-// 		var thisEvent = Events[i];
-// 		thisEvent.getImage();
-// 	}
-// };
+var logger = function(e) {
+	console.log(e.target.response);
+};
+
+function getProfile(){
+    var request = gapi.client.directory.users.photos.get({
+    	'userKey': 'dwandrey@ideo.com'
+    });
+
+	request.execute(function(resp) {
+	  console.log(resp);
+	});
+}
 
 var fetchImages = function() {
 	for(var i = 0; i < OutOfOfficeImages.length; i++) {
@@ -125,12 +93,18 @@ var renderOutOfOffice = function(thisEvent) {
 	return OutOfOfficePeople;
 };
 
+var newDay = function(i, thisEvent) {
+	if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
+		return true;
+	}
+};
+
 var renderEvents = function(amt) {
 	for(var i = 0; i < amt; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
 	
-		if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
+		if(newDay(i, thisEvent)) {
 			template.querySelector('.date-container').style.display = 'block';
 			template.querySelector('.event-date').innerHTML = thisEvent.day +' '+ thisEvent.date;
 			template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
@@ -140,7 +114,6 @@ var renderEvents = function(amt) {
 		template.querySelector('.event-title').innerHTML = thisEvent.summary;
 		template.querySelector('.event-location').innerHTML = thisEvent.where;
 		template.querySelector('.event-time').innerHTML = thisEvent.time;
-		// template.querySelector('.event-info').style.background = thisEvent.getColor();
 
 		if(thisEvent.time === 'All day') {
 			template.querySelector('.event').className += ' all-day';
@@ -173,8 +146,8 @@ var getDisplayTime = function(thisEvent) {
   else {
     var when = thisEvent.start.date;
     var end = moment(thisEvent.end.date).format('MDD');
-    var day = moment(when).format('ddd');
-    var date = moment(when).format('D');
+    var day = moment(when).format('dddd');
+    var date = moment(when).format('M/D');
     var dateMonthDay = moment(thisEvent.start.date).format('MDD');
     return [day, date, 'All day', end];
   } 
@@ -273,8 +246,3 @@ var listAllEvents = function () {
       fetchImages();
   }, 2000);
 };
-
-// setInterval(function(){
-// 	Events = [];
-// 	listAllEvents();
-// }, 30000);
