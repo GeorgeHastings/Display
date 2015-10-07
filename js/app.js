@@ -37,7 +37,7 @@ Event.prototype.getColor = function() {
 	if(this.calendar === 'NY - External Events') {
 		return '#3F5478';
 	}
-	if(this.calendar === 'NY - Project Events') {
+	if(this.calendar === 'NY - Client Events') {
 		return '#E6AF2E';
 	}
 	else {
@@ -199,7 +199,7 @@ var getRequest = function(calendar, weekNum) {
     'timeMax': moment().add(weekNum+1, 'week').endOf('isoWeek').toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 15,
+    'maxResults': 20,
     'orderBy': 'startTime'
   });
   return request;
@@ -219,7 +219,7 @@ var listAllEvents = function (weekNum) {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(25);
+      renderEvents(20);
   }, 2000);
 };
 
