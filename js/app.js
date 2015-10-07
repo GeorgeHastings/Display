@@ -1,12 +1,12 @@
 'use strict';
 
-var CurrentWeek = 0;
-var Events = [];
-var Calendars  = {
-	internal: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
-	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
-	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
-};
+var CurrentWeek = 0,
+	Events = [],
+	Calendars  = {
+		internal: 'ideo.com_p0gg0riugm6d554et1jic6okrg@group.calendar.google.com',
+		external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
+		projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
+	};
 
 var UI = {
 	tmpl: document.getElementById('event-template'),
@@ -44,102 +44,91 @@ Event.prototype.getColor = function() {
 	}
 };
 
-var renderDateTitles = function(weekNum) {
-	var days = document.querySelectorAll('.week-container li');
-	var names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-	
-	for(var i = 0; i < days.length; i++) {
-		days[i].innerHTML += ('<div class="date">'+moment().add(weekNum, 'week').day(names[i]).format('dddd M/D')+'</div>');
-	}
-};
-
-var renderEvents = function() {
-	for(var i = 0; i < Events.length; i++) {
-		var thisEvent = Events[i];
-		var template = UI.tmpl.content.cloneNode(true);
-		var container = document.getElementById(thisEvent.day);
-
-		if(thisEvent.time === 'All day') {
-			template.querySelector('.event-time').style.display = 'none';
-		}
-
-		template.querySelector('.event').id = thisEvent.id;
-		template.querySelector('.event-title').innerHTML = thisEvent.summary;
-		template.querySelector('.event-time').innerHTML = thisEvent.time;
-		template.querySelector('.event-info').style.background = thisEvent.getColor();
+var Renderers = {
+	renderDateTitles: function(weekNum) {
+		var days = document.querySelectorAll('.week-container li'),
+			names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 		
-		if(container) {
-			container.appendChild(template);
+		for(var i = 0; i < days.length; i++) {
+			days[i].innerHTML += ('<div class="date">'+moment().add(weekNum, 'week').day(names[i]).format('dddd M/D')+'</div>');
 		}
-		else {
-			return;
+	},
+	renderEvents: function() {
+		for(var i = 0; i < Events.length; i++) {
+			var thisEvent = Events[i],
+				template = UI.tmpl.content.cloneNode(true),
+				container = document.getElementById(thisEvent.day);
+
+			if(thisEvent.time === 'All day') {
+				template.querySelector('.event-time').style.display = 'none';
+			}
+
+			template.querySelector('.event').id = thisEvent.id;
+			template.querySelector('.event-title').innerHTML = thisEvent.summary;
+			template.querySelector('.event-time').innerHTML = thisEvent.time;
+			template.querySelector('.event-info').style.background = thisEvent.getColor();
+			
+			if(container) {
+				container.appendChild(template);
+			}
+			else {
+				return;
+			}
 		}
 	}
 };
 
-var parseCreatorName = function(creator) {
-		creator = creator.replace(/\s/g, '');
-		return creator;
-};
-
-var parseEmail = function(email) {
-	return email.substring(0, email.indexOf('@'));
-};
-
-var sortEventsByTime = function() {
-	Events.sort(function(a, b){
-	  return a.sortIndex-b.sortIndex;
-	});
-};
-
-var getEventDay = function(thisEvent) {
-  var when;
-  if(thisEvent.start.dateTime) {
-    when = thisEvent.start.dateTime;
-  }
-  else {
-    when = thisEvent.start.date;
-  }
-  return moment(when);
-};
-
-var getDisplayTime = function(thisEvent) {
-  if(thisEvent.start.dateTime) {
-    var day = moment(thisEvent.start.dateTime).format('ddd');
-    var date = moment(thisEvent.start.dateTime).format('D');
-    var start = moment(thisEvent.start.dateTime);
-    var end = moment(thisEvent.end.dateTime);
-    return [day, date, ''+start.format('h:mm')+' - '+end.format('h:mm a')+''];
-  }
-  else {
-    var when = thisEvent.start.date;
-    var day = moment(when).format('ddd');
-    var date = moment(when).format('D');
-    return [day, date, 'All day'];
-  } 
-};
-
-var getCreator = function(thisEvent) {
-  var creator;
-  if(thisEvent.creator.email) {
-    creator = thisEvent.creator.email;
-  }
-  else {
-    creator = thisEvent.organizer.email;
-  }
-  return creator;
-};
-
-var getSortIndex = function(thisEvent) {
-  var date;
-  if(thisEvent.start.dateTime) {
-    date = moment(thisEvent.start.dateTime);
-  }
-  else {
-    date = moment(thisEvent.start.date);
-  }
-  var sortIndex = date.format('MM') + date.format('DD') + date.format('HH mm');
-  return parseInt(sortIndex);
+var Helpers = {
+	getSortIndex: function(thisEvent) {
+	  var date;
+	  if(thisEvent.start.dateTime) {
+	    date = moment(thisEvent.start.dateTime);
+	  }
+	  else {
+	    date = moment(thisEvent.start.date);
+	  }
+	  var sortIndex = date.format('MM') + date.format('DD') + date.format('HH mm');
+	  return parseInt(sortIndex);
+	},
+	sortEventsByTime: function() {
+		Events.sort(function(a, b){
+		  return a.sortIndex-b.sortIndex;
+		});
+	},
+	getDisplayTime: function(thisEvent) {
+	  var day,
+	  	  date;
+	  if(thisEvent.start.dateTime) {
+	    var start = moment(thisEvent.start.dateTime),
+	    	end = moment(thisEvent.end.dateTime);
+	    day = moment(thisEvent.start.dateTime).format('ddd');
+	    date = moment(thisEvent.start.dateTime).format('D');
+	    return [day, date, ''+start.format('h:mm')+' - '+end.format('h:mm a')+''];
+	  }
+	  else {
+	    var when = thisEvent.start.date;
+	    day = moment(when).format('ddd');
+	    date = moment(when).format('D');
+	    return [day, date, 'All day'];
+	  } 
+	},
+	getCreator: function(thisEvent) {
+	  var creator;
+	  if(thisEvent.creator.email) {
+	    creator = thisEvent.creator.email;
+	  }
+	  else {
+	    creator = thisEvent.organizer.email;
+	  }
+	  return creator;
+	},
+	clearCalendar: function() {
+		Events = [];
+		var days = document.querySelectorAll('.week-container li');
+		for(var i = 0; i < days.length; i++) {
+			days[i].innerHTML = '';
+		}
+	}
 };
 
 var getRequest = function(calendar, weekNum) {
@@ -158,14 +147,14 @@ var getRequest = function(calendar, weekNum) {
 var buildEvents = function(events) {
 	if(events) {
 		for (var i = 0; i < events.length; i++) {
-		  	var thisEvent = events[i];
-			var summary = thisEvent.summary;
-			var day = getDisplayTime(thisEvent)[0];
-			var date = getDisplayTime(thisEvent)[1];
-			var time = getDisplayTime(thisEvent)[2];
-			var creator = getCreator(thisEvent);
-			var calendar = thisEvent.organizer.displayName;
-			var sortIndex = getSortIndex(thisEvent);
+		  	var thisEvent = events[i],
+				summary = thisEvent.summary,
+				day = Helpers.getDisplayTime(thisEvent)[0],
+				date = Helpers.getDisplayTime(thisEvent)[1],
+				time = Helpers.getDisplayTime(thisEvent)[2],
+				creator = Helpers.getCreator(thisEvent),
+				calendar = thisEvent.organizer.displayName,
+				sortIndex = Helpers.getSortIndex(thisEvent);
 
 			Events.push(new Event(summary, day, date, time, creator, calendar, sortIndex));
 		}
@@ -182,23 +171,14 @@ var createEventObjects = function(calendar, weekNum) {
 };
 
 var listAllEvents = function (weekNum) {
-
   for(var calendar in Calendars) {
     createEventObjects(calendar, weekNum);
   }
 
   setTimeout(function(){
-  	  sortEventsByTime();
-      renderEvents();
+  	  Helpers.sortEventsByTime();
+      Renderers.renderEvents();
   }, 2000);
-};
-
-var clearCalendar = function() {
-	Events = [];
-	var days = document.querySelectorAll('.week-container li');
-	for(var i = 0; i < days.length; i++) {
-		days[i].innerHTML = '';
-	}
 };
 
 var switchWeek = function(direction) {
@@ -208,9 +188,9 @@ var switchWeek = function(direction) {
 	else {
 		CurrentWeek++;
 	}
-	clearCalendar();
+	Helpers.clearCalendar();
 	listAllEvents(CurrentWeek);
-	renderDateTitles(CurrentWeek);
+	Renderers.renderDateTitles(CurrentWeek);
 };
 
 var bindEvents = function() {
@@ -223,6 +203,6 @@ var bindEvents = function() {
 };
 
 document.addEventListener('DOMContentLoaded', function(){
-	renderDateTitles(0);
+	Renderers.renderDateTitles(0);
 	bindEvents();
 });
