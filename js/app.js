@@ -13,13 +13,12 @@ var UI = {
 	eventContainer: document.getElementById('event-container')
 };
 
-var Event = function(summary, day, date, time, where, creator, calendar, sortIndex) {
+var Event = function(summary, day, date, time, creator, calendar, sortIndex) {
 	this.summary = summary;
 	this.day = day;
 	this.date = date;
 	this.time = time;
 	this.creator = creator;
-	this.where = where;
 	this.calendar = calendar;
 	this.sortIndex = sortIndex;
 };
@@ -45,41 +44,17 @@ Event.prototype.getColor = function() {
 	}
 };
 
-Event.prototype.handler = function(e) {
-	var obj = JSON.parse(e.target.response);
-	if(obj.results) {
-		var set = document.querySelectorAll('[data-person="'+obj.results[0].email+'"]');
-		for(var i = 0; i < set.length; i++) {
-			set[i].src = ''+obj.results[0].image+'';
-		}
-	}	
-};
-
-var parseCreatorName = function(creator) {
-		creator = creator.replace(/\s/g, '');
-		return creator;
-};
-
-var parseEmail = function(email) {
-	return email.substring(0, email.indexOf('@'));
-};
-
-var sortEventsByTime = function() {
-	Events.sort(function(a, b){
-	  return a.sortIndex-b.sortIndex;
-	});
-};
-
 var renderDateTitles = function(weekNum) {
 	var days = document.querySelectorAll('.week-container li');
 	var names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+	
 	for(var i = 0; i < days.length; i++) {
 		days[i].innerHTML += ('<div class="date">'+moment().add(weekNum, 'week').day(names[i]).format('dddd M/D')+'</div>');
 	}
 };
 
-var renderEvents = function(amt) {
-	for(var i = 0; i < amt; i++) {
+var renderEvents = function() {
+	for(var i = 0; i < Events.length; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
 		var container = document.getElementById(thisEvent.day);
@@ -102,12 +77,19 @@ var renderEvents = function(amt) {
 	}
 };
 
-var clearCalendar = function() {
-	Events = [];
-	var days = document.querySelectorAll('.week-container li');
-	for(var i = 0; i < days.length; i++) {
-		days[i].innerHTML = '';
-	}
+var parseCreatorName = function(creator) {
+		creator = creator.replace(/\s/g, '');
+		return creator;
+};
+
+var parseEmail = function(email) {
+	return email.substring(0, email.indexOf('@'));
+};
+
+var sortEventsByTime = function() {
+	Events.sort(function(a, b){
+	  return a.sortIndex-b.sortIndex;
+	});
 };
 
 var getEventDay = function(thisEvent) {
@@ -148,17 +130,6 @@ var getCreator = function(thisEvent) {
   return creator;
 };
 
-var getLocation = function(thisEvent) {
-  var where;
-  if(thisEvent.location) {
-    where = thisEvent.location;
-  }
-  else {
-    where = 'New York';
-  }
-  return where;
-};
-
 var getSortIndex = function(thisEvent) {
   var date;
   if(thisEvent.start.dateTime) {
@@ -171,6 +142,19 @@ var getSortIndex = function(thisEvent) {
   return parseInt(sortIndex);
 };
 
+var getRequest = function(calendar, weekNum) {
+  var request = gapi.client.calendar.events.list({
+    'calendarId': calendar,
+    'timeMin': moment().add(weekNum, 'week').format(),
+    'timeMax': moment().add(weekNum+1, 'week').endOf('isoWeek').toISOString(),
+    'showDeleted': false,
+    'singleEvents': true,
+    'maxResults': 30,
+    'orderBy': 'startTime'
+  });
+  return request;
+};
+
 var buildEvents = function(events) {
 	if(events) {
 		for (var i = 0; i < events.length; i++) {
@@ -179,12 +163,11 @@ var buildEvents = function(events) {
 			var day = getDisplayTime(thisEvent)[0];
 			var date = getDisplayTime(thisEvent)[1];
 			var time = getDisplayTime(thisEvent)[2];
-			var where = getLocation(thisEvent);
 			var creator = getCreator(thisEvent);
 			var calendar = thisEvent.organizer.displayName;
 			var sortIndex = getSortIndex(thisEvent);
 
-			Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex));
+			Events.push(new Event(summary, day, date, time, creator, calendar, sortIndex));
 		}
 	}    
 	else {
@@ -192,20 +175,7 @@ var buildEvents = function(events) {
 	}
 };
 
-var getRequest = function(calendar, weekNum) {
-  var request = gapi.client.calendar.events.list({
-    'calendarId': calendar,
-    'timeMin': moment().add(weekNum, 'week').format(),
-    'timeMax': moment().add(weekNum+1, 'week').endOf('isoWeek').toISOString(),
-    'showDeleted': false,
-    'singleEvents': true,
-    'maxResults': 20,
-    'orderBy': 'startTime'
-  });
-  return request;
-};
-
-var listUpComingEvents = function(calendar, weekNum) {
+var createEventObjects = function(calendar, weekNum) {
   getRequest(Calendars[calendar], weekNum).execute(function(resp) {
     buildEvents(resp.items);
   });
@@ -214,28 +184,45 @@ var listUpComingEvents = function(calendar, weekNum) {
 var listAllEvents = function (weekNum) {
 
   for(var calendar in Calendars) {
-    listUpComingEvents(calendar, weekNum);
+    createEventObjects(calendar, weekNum);
   }
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(20);
+      renderEvents();
   }, 2000);
+};
+
+var clearCalendar = function() {
+	Events = [];
+	var days = document.querySelectorAll('.week-container li');
+	for(var i = 0; i < days.length; i++) {
+		days[i].innerHTML = '';
+	}
+};
+
+var switchWeek = function(direction) {
+	if(direction === 'left') {
+		CurrentWeek--;
+	}
+	else {
+		CurrentWeek++;
+	}
+	clearCalendar();
+	listAllEvents(CurrentWeek);
+	renderDateTitles(CurrentWeek);
+};
+
+var bindEvents = function() {
+	document.getElementById('pageCalRight').addEventListener('click', function(){
+		switchWeek('right');
+	});
+	document.getElementById('pageCalLeft').addEventListener('click', function(){
+		switchWeek('left');
+	});
 };
 
 document.addEventListener('DOMContentLoaded', function(){
 	renderDateTitles(0);
-});
-
-document.getElementById('pageCalRight').addEventListener('click', function(){
-	CurrentWeek++;
-	clearCalendar();
-	listAllEvents(CurrentWeek);
-	renderDateTitles(CurrentWeek);
-});
-document.getElementById('pageCalLeft').addEventListener('click', function(){
-	CurrentWeek--;
-	clearCalendar();
-	listAllEvents(CurrentWeek);
-	renderDateTitles(CurrentWeek);
+	bindEvents();
 });

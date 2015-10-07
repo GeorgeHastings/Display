@@ -72,10 +72,10 @@ h2 {
 	li {
 		width: 20%;
 		float: left;
+	}
 
-		& + li {
-			padding-left: 0.5vw;
-		}
+	li + li {
+		padding-left: 0.5vw;
 	}
 }
 
@@ -92,8 +92,14 @@ h2 {
 	animation: load-in 0.3s ease-in;
 	@extend .clearfix;
 
-	& + .event {
-		margin-top: 0.25vw;
+	&-info {
+		float: right;
+		width: 100%;
+		padding: 1.5vw;
+		color: #fff;
+		background: rgb(0,155,255);
+		border-radius: 5px;
+		@extend .clearfix;
 	}
 
 	&-content {
@@ -121,16 +127,10 @@ h2 {
 	&-time {
 		margin-top: 1em;
 	}
-}
 
-.event-info {
-	float: right;
-	width: 100%;
-	padding: 1.5vw;
-	color: #fff;
-	background: rgb(0,155,255);
-	border-radius: 5px;
-	@extend .clearfix;
+	& + .event {
+		margin-top: 0.25vw;
+	}
 }
 
 .page-cal-left,

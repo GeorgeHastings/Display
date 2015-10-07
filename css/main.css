@@ -55,8 +55,8 @@ h2 {
   .week-container li {
     width: 20%;
     float: left; }
-    .week-container li + li {
-      padding-left: 0.5vw; }
+  .week-container li + li {
+    padding-left: 0.5vw; }
 
 .date {
   margin-bottom: 1em;
@@ -68,8 +68,13 @@ h2 {
 .event {
   display: block;
   animation: load-in 0.3s ease-in; }
-  .event + .event {
-    margin-top: 0.25vw; }
+  .event-info {
+    float: right;
+    width: 100%;
+    padding: 1.5vw;
+    color: #fff;
+    background: #009bff;
+    border-radius: 5px; }
   .event-content {
     float: left;
     max-width: 100%; }
@@ -87,14 +92,8 @@ h2 {
     line-height: 0.7em; }
   .event-time {
     margin-top: 1em; }
-
-.event-info {
-  float: right;
-  width: 100%;
-  padding: 1.5vw;
-  color: #fff;
-  background: #009bff;
-  border-radius: 5px; }
+  .event + .event {
+    margin-top: 0.25vw; }
 
 .page-cal-left,
 .page-cal-right {
