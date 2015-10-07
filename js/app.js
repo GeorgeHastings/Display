@@ -145,11 +145,11 @@ var getSortIndex = function(thisEvent) {
 var getRequest = function(calendar, weekNum) {
   var request = gapi.client.calendar.events.list({
     'calendarId': calendar,
-    'timeMin': moment().add(weekNum, 'week').format(),
-    'timeMax': moment().add(weekNum+1, 'week').endOf('isoWeek').toISOString(),
+    'timeMin': moment().add(weekNum, 'week').isoWeekday(1).format(),
+    'timeMax': moment().add(weekNum, 'week').isoWeekday(5).format(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 30,
+    'maxResults': 50,
     'orderBy': 'startTime'
   });
   return request;
