@@ -99,8 +99,8 @@ var newDay = function(i, thisEvent) {
 	}
 };
 
-var renderEvents = function(amt) {
-	for(var i = 0; i < amt; i++) {
+var renderEvents = function() {
+	for(var i = 0; i < Events.length; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
 	
@@ -242,7 +242,7 @@ var listAllEvents = function () {
 
   setTimeout(function(){
   	  sortEventsByTime();
-      renderEvents(15);
+      renderEvents();
       fetchImages();
   }, 2000);
 };
