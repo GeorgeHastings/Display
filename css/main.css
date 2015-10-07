@@ -5,7 +5,8 @@ html,
 body {
   margin: 0;
   height: 100%;
-  width: 100%; }
+  width: 100%;
+  overflow: hidden; }
 
 body {
   font: 16px / 15px 'Gotham';
@@ -44,23 +45,35 @@ h2 {
   clear: both; }
 
 .event-container {
-  padding: 2.5vw 5vw; }
+  padding: 2.5vw 5vw;
+  height: 100%; }
 
 .week-container {
+  width: 100%;
+  height: 100%;
   margin: 0;
-  padding: 0;
+  padding: 2em 1em 1em 1em;
   font-size: 1em;
   text-transform: uppercase;
-  padding: 1vw 1vw; }
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-start;
+  align-items: flex-start; }
   .week-container li {
-    width: 20%;
-    float: left; }
+    height: 100%;
+    -webkit-flex: 1 0 0;
+    flex: 1 0 0;
+    overflow: scroll; }
   .week-container li + li {
     padding-left: 0.5vw; }
 
 .date {
+  position: fixed;
+  top: 2.5em;
   margin-bottom: 1em;
-  font-size: 1em;
+  font-size: 0.7em;
   letter-spacing: 1px;
   text-transform: uppercase;
   animation: load-in 0.3s ease-in; }
