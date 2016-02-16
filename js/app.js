@@ -35,7 +35,7 @@ var handler = function(e) {
 		for(var i = 0; i < set.length; i++) {
 			set[i].src = ''+obj.results[0].image+'';
 		}
-	}	
+	}
 };
 
 function callAjax(emailName, callback){
@@ -50,10 +50,9 @@ var logger = function(e) {
 };
 
 function getProfile(){
-    var request = gapi.client.directory.users.photos.get({
-    	'userKey': 'dwandrey@ideo.com'
-    });
-
+  var request = gapi.client.directory.users.photos.get({
+  	'userKey': 'dwandrey@ideo.com'
+  });
 	request.execute(function(resp) {
 	  console.log(resp);
 	});
@@ -81,17 +80,18 @@ var sortEventsByTime = function() {
 	});
 };
 
-var renderOutOfOffice = function(thisEvent) {
-	var OutOfOfficePeople = '';
-
-	for(var i = 0; i < OutOfOffice.length; i++) {
-		if(getSortIndex(OutOfOffice[i]) < thisEvent.sortIndex && getDisplayTime(OutOfOffice[i])[3] > thisEvent.dateMonthDay) {
-			OutOfOfficePeople += '<img data-person="'+OutOfOffice[i].attendees[0].email+'">';
-			OutOfOfficeImages.push(OutOfOffice[i].attendees[0].email);
-		}
-	}
-	return OutOfOfficePeople;
-};
+// var renderOutOfOffice = function(thisEvent) {
+// 	var OutOfOfficePeople = '';
+//
+// 	for(var i = 0; i < OutOfOffice.length; i++) {
+// 		if(getSortIndex(OutOfOffice[i]) < thisEvent.sortIndex && getDisplayTime(OutOfOffice[i])[3] > thisEvent.dateMonthDay && OutOfOffice[i].attendees) {
+// 			// console.log(OutOfOffice[i]);
+// 			OutOfOfficePeople += '<img data-person="'+OutOfOffice[i].attendees[0].email+'">';
+// 			OutOfOfficeImages.push(OutOfOffice[i].attendees[0].email);
+// 		}
+// 	}
+// 	return OutOfOfficePeople;
+// };
 
 var newDay = function(i, thisEvent) {
 	if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
@@ -103,11 +103,11 @@ var renderEvents = function() {
 	for(var i = 0; i < Events.length; i++) {
 		var thisEvent = Events[i];
 		var template = UI.tmpl.content.cloneNode(true);
-	
+
 		if(newDay(i, thisEvent)) {
 			template.querySelector('.date-container').style.display = 'block';
 			template.querySelector('.event-date').innerHTML = thisEvent.day +' '+ thisEvent.date;
-			template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
+			// template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
 		}
 
 		template.querySelector('.event').id = thisEvent.id;
@@ -150,7 +150,7 @@ var getDisplayTime = function(thisEvent) {
     var date = moment(when).format('M/D');
     var dateMonthDay = moment(thisEvent.start.date).format('MDD');
     return [day, date, 'All day', end];
-  } 
+  }
 };
 
 var getCreator = function(thisEvent) {
@@ -204,12 +204,12 @@ var buildEvents = function(events) {
 	}
 };
 
-var buildOutOfOffice = function(events) {
-	for (var i = 0; i < events.length; i++) {
-		var thisOutOfOffice = events[i];
-		OutOfOffice.push(thisOutOfOffice);
-	}
-};
+// var buildOutOfOffice = function(events) {
+// 	for (var i = 0; i < events.length; i++) {
+// 		var thisOutOfOffice = events[i];
+// 		OutOfOffice.push(thisOutOfOffice);
+// 	}
+// };
 
 var getRequest = function(calendar) {
   var request = gapi.client.calendar.events.list({
@@ -226,11 +226,11 @@ var getRequest = function(calendar) {
 var listUpComingEvents = function(calendar) {
   getRequest(Calendars[calendar]).execute(function(resp) {
     if(resp.summary === 'NY - OOO') {
-    	buildOutOfOffice(resp.items);
+    	// buildOutOfOffice(resp.items);
     }
     else {
     	buildEvents(resp.items);
-    }	
+    }
   });
 };
 
