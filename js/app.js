@@ -28,50 +28,13 @@ var Event = function(summary, day, date, time, where, creator, calendar, sortInd
 	this.dateMonthDay = dateMonthDay;
 };
 
-var handler = function(e) {
-	var obj = JSON.parse(e.target.response);
-	if(obj.results) {
-		var set = document.querySelectorAll('[data-person="'+obj.results[0].email+'"]');
-		for(var i = 0; i < set.length; i++) {
-			set[i].src = ''+obj.results[0].image+'';
-		}
-	}
-};
-
-function callAjax(emailName, callback){
-  var c = new XMLHttpRequest;
-  c.onload = callback;
-  c.open('GET', 'http://localhost:1235/api/teammembers?limit=10&offset=0&email='+emailName+'%40ideo.com');
-  c.send();
-}
-
-var logger = function(e) {
-	console.log(e.target.response);
-};
-
-function getProfile(){
+var getProfile = function(){
   var request = gapi.client.directory.users.photos.get({
   	'userKey': 'dwandrey@ideo.com'
   });
 	request.execute(function(resp) {
 	  console.log(resp);
 	});
-}
-
-var fetchImages = function() {
-	for(var i = 0; i < OutOfOfficeImages.length; i++) {
-		var img = parseEmail(OutOfOfficeImages[i]);
-		callAjax(img, handler);
-	}
-};
-
-var parseCreatorName = function(creator) {
-		creator = creator.replace(/\s/g, '');
-		return creator;
-};
-
-var parseEmail = function(email) {
-	return email.substring(0, email.indexOf('@'));
 };
 
 var sortEventsByTime = function() {
@@ -80,18 +43,17 @@ var sortEventsByTime = function() {
 	});
 };
 
-// var renderOutOfOffice = function(thisEvent) {
-// 	var OutOfOfficePeople = '';
-//
-// 	for(var i = 0; i < OutOfOffice.length; i++) {
-// 		if(getSortIndex(OutOfOffice[i]) < thisEvent.sortIndex && getDisplayTime(OutOfOffice[i])[3] > thisEvent.dateMonthDay && OutOfOffice[i].attendees) {
-// 			// console.log(OutOfOffice[i]);
-// 			OutOfOfficePeople += '<img data-person="'+OutOfOffice[i].attendees[0].email+'">';
-// 			OutOfOfficeImages.push(OutOfOffice[i].attendees[0].email);
-// 		}
-// 	}
-// 	return OutOfOfficePeople;
-// };
+var renderOutOfOffice = function(thisEvent) {
+	var OutOfOfficePeople = '';
+
+	for(var i = 0; i < OutOfOffice.length; i++) {
+		if(getSortIndex(OutOfOffice[i]) < thisEvent.sortIndex && getDisplayTime(OutOfOffice[i])[3] > thisEvent.dateMonthDay && OutOfOffice[i].attendees) {
+			OutOfOfficePeople += '<img data-person="'+OutOfOffice[i].attendees[0].email+'">';
+			OutOfOfficeImages.push(OutOfOffice[i].attendees[0].email);
+		}
+	}
+	return OutOfOfficePeople;
+};
 
 var newDay = function(i, thisEvent) {
 	if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
@@ -107,7 +69,7 @@ var renderEvents = function() {
 		if(newDay(i, thisEvent)) {
 			template.querySelector('.date-container').style.display = 'block';
 			template.querySelector('.event-date').innerHTML = thisEvent.day +' '+ thisEvent.date;
-			// template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
+			template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
 		}
 
 		template.querySelector('.event').id = thisEvent.id;
@@ -123,32 +85,25 @@ var renderEvents = function() {
 	}
 };
 
-var getEventDay = function(thisEvent) {
-  var when;
-  if(thisEvent.start.dateTime) {
-    when = thisEvent.start.dateTime;
-  }
-  else {
-    when = thisEvent.start.date;
-  }
-  return moment(when);
-};
-
 var getDisplayTime = function(thisEvent) {
-  if(thisEvent.start.dateTime) {
-    var day = moment(thisEvent.start.dateTime).format('dddd');
-    var date = moment(thisEvent.start.dateTime).format('M/D');
-    var start = moment(thisEvent.start.dateTime);
-    var end = moment(thisEvent.end.dateTime);
-    var dateMonthDay = moment(thisEvent.start.dateTime).format('MDD');
+	var end,
+			date,
+			day,
+			dateMonthDay;
+	if(thisEvent.start.dateTime) {
+		var start = moment(thisEvent.start.dateTime);
+    day = moment(thisEvent.start.dateTime).format('dddd');
+    date = moment(thisEvent.start.dateTime).format('M/D');
+    end = moment(thisEvent.end.dateTime);
+    dateMonthDay = moment(thisEvent.start.dateTime).format('MDD');
     return [day, date, ''+start.format('h:mm')+' - '+end.format('h:mm a')+'', dateMonthDay];
   }
   else {
     var when = thisEvent.start.date;
-    var end = moment(thisEvent.end.date).format('MDD');
-    var day = moment(when).format('dddd');
-    var date = moment(when).format('M/D');
-    var dateMonthDay = moment(thisEvent.start.date).format('MDD');
+    end = moment(thisEvent.end.date).format('MDD');
+    day = moment(when).format('dddd');
+    date = moment(when).format('M/D');
+    dateMonthDay = moment(thisEvent.start.date).format('MDD');
     return [day, date, 'All day', end];
   }
 };
@@ -189,27 +144,27 @@ var getSortIndex = function(thisEvent) {
 
 var buildEvents = function(events) {
     for (var i = 0; i < events.length; i++) {
-	  	var thisEvent = events[i];
-		var summary = thisEvent.summary;
-		var day = getDisplayTime(thisEvent)[0];
-		var date = getDisplayTime(thisEvent)[1];
-		var time = getDisplayTime(thisEvent)[2];
-		var dateMonthDay = getDisplayTime(thisEvent)[3];
-		var where = getLocation(thisEvent);
-		var creator = getCreator(thisEvent);
-		var calendar = thisEvent.organizer.displayName;
-		var sortIndex = getSortIndex(thisEvent);
+	  var thisEvent = events[i],
+				summary = thisEvent.summary,
+				day = getDisplayTime(thisEvent)[0],
+				date = getDisplayTime(thisEvent)[1],
+				time = getDisplayTime(thisEvent)[2],
+				dateMonthDay = getDisplayTime(thisEvent)[3],
+				where = getLocation(thisEvent),
+				creator = getCreator(thisEvent),
+				calendar = thisEvent.organizer.displayName,
+				sortIndex = getSortIndex(thisEvent);
 
 		Events.push(new Event(summary, day, date, time, where, creator, calendar, sortIndex, dateMonthDay));
 	}
 };
 
-// var buildOutOfOffice = function(events) {
-// 	for (var i = 0; i < events.length; i++) {
-// 		var thisOutOfOffice = events[i];
-// 		OutOfOffice.push(thisOutOfOffice);
-// 	}
-// };
+var buildOutOfOffice = function(events) {
+	for (var i = 0; i < events.length; i++) {
+		var thisOutOfOffice = events[i];
+		OutOfOffice.push(thisOutOfOffice);
+	}
+};
 
 var getRequest = function(calendar) {
   var request = gapi.client.calendar.events.list({
@@ -226,7 +181,7 @@ var getRequest = function(calendar) {
 var listUpComingEvents = function(calendar) {
   getRequest(Calendars[calendar]).execute(function(resp) {
     if(resp.summary === 'NY - OOO') {
-    	// buildOutOfOffice(resp.items);
+    	buildOutOfOffice(resp.items);
     }
     else {
     	buildEvents(resp.items);
@@ -235,7 +190,6 @@ var listUpComingEvents = function(calendar) {
 };
 
 var listAllEvents = function () {
-
   for(var calendar in Calendars) {
     listUpComingEvents(calendar);
   }
@@ -243,6 +197,5 @@ var listAllEvents = function () {
   setTimeout(function(){
   	  sortEventsByTime();
       renderEvents();
-      fetchImages();
   }, 2000);
 };
