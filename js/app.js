@@ -8,7 +8,8 @@ var Calendars  = {
 	external: 'ideo.com_20hjl85r7mi3e2vtfncskfiabs@group.calendar.google.com',
 	projects: 'ideo.com_v4vpo5b47up8803v4omofvet4c@group.calendar.google.com',
 	ooo: 'ideo.com_bdpb36toirhifucfijthud9dng@group.calendar.google.com',
-	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com'
+	visitors: 'ideo.com_34qgi5b59dtf8ljfls0ojtj804@group.calendar.google.com',
+	org: 'ideo.org_dt4du4qf1bk36unmt2gk287nas@group.calendar.google.com'
 };
 
 var UI = {
@@ -43,17 +44,17 @@ var sortEventsByTime = function() {
 	});
 };
 
-var renderOutOfOffice = function(thisEvent) {
-	var OutOfOfficePeople = '';
-
-	for(var i = 0; i < OutOfOffice.length; i++) {
-		if(getSortIndex(OutOfOffice[i]) < thisEvent.sortIndex && getDisplayTime(OutOfOffice[i])[3] > thisEvent.dateMonthDay && OutOfOffice[i].attendees) {
-			OutOfOfficePeople += '<img data-person="'+OutOfOffice[i].attendees[0].email+'">';
-			OutOfOfficeImages.push(OutOfOffice[i].attendees[0].email);
-		}
-	}
-	return OutOfOfficePeople;
-};
+// var renderOutOfOffice = function(thisEvent) {
+// 	var OutOfOfficePeople = '';
+//
+// 	for(var i = 0; i < OutOfOffice.length; i++) {
+// 		if(getSortIndex(OutOfOffice[i]) < thisEvent.sortIndex && getDisplayTime(OutOfOffice[i])[3] > thisEvent.dateMonthDay && OutOfOffice[i].attendees) {
+// 			OutOfOfficePeople += '<img data-person="'+OutOfOffice[i].attendees[0].email+'">';
+// 			OutOfOfficeImages.push(OutOfOffice[i].attendees[0].email);
+// 		}
+// 	}
+// 	return OutOfOfficePeople;
+// };
 
 var newDay = function(i, thisEvent) {
 	if(i === 0 || i > 0 && Events[i-1].day !== thisEvent.day) {
@@ -69,7 +70,7 @@ var renderEvents = function() {
 		if(newDay(i, thisEvent)) {
 			template.querySelector('.date-container').style.display = 'block';
 			template.querySelector('.event-date').innerHTML = thisEvent.day +' '+ thisEvent.date;
-			template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
+			// template.querySelector('.ooo-container').innerHTML = renderOutOfOffice(thisEvent);
 		}
 
 		template.querySelector('.event').id = thisEvent.id;
@@ -199,3 +200,7 @@ var listAllEvents = function () {
       renderEvents();
   }, 2000);
 };
+
+setInterval(function(){
+	location.reload();
+}, 100000);

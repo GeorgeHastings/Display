@@ -29,3 +29,18 @@ heart: Tue Feb 16 19:04:02 2016: Executed "/usr/local/Cellar/couchdb/1.6.1_1/bin
 
 heart_beat_kill_pid = 69542
 heart_beat_timeout = 11
+heart: Thu Mar 10 19:04:23 2016: heart-beat time-out, no activity for 3595 seconds
+heart: Thu Mar 10 19:04:24 2016: Executed "/usr/local/Cellar/couchdb/1.6.1_1/bin/couchdb -k" -> 0. Terminating.
+
+heart_beat_kill_pid = 93263
+heart_beat_timeout = 11
+heart: Mon Oct 17 20:20:42 2016: heart-beat time-out, no activity for 7903 seconds
+heart: Mon Oct 17 20:20:43 2016: Executed "/usr/local/Cellar/couchdb/1.6.1_1/bin/couchdb -k" -> 0. Terminating.
+
+heart_beat_kill_pid = 18186
+heart_beat_timeout = 11
+heart: Wed Oct 19 18:43:36 2016: heart-beat time-out, no activity for 2946 seconds
+heart: Wed Oct 19 18:43:37 2016: Executed "/usr/local/Cellar/couchdb/1.6.1_1/bin/couchdb -k" -> 0. Terminating.
+
+heart_beat_kill_pid = 11827
+heart_beat_timeout = 11
